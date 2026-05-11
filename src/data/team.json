@@ -1,0 +1,35 @@
+[
+  {
+    "id": "1",
+    "name": "John Doe",
+    "role": "Lead",
+    "batch": "2024",
+    "avatarUrl": "https://api.dicebear.com/7.x/avataaars/svg?seed=John",
+    "email": "john.doe@nitrr.ac.in",
+    "githubUrl": "https://github.com/johndoe",
+    "linkedinUrl": "https://linkedin.com/in/johndoe",
+    "bio": "Leading the organization's vision and strategy.",
+    "expertise": ["Leadership", "Strategy", "Open Source"]
+  },
+  {
+    "id": "2",
+    "name": "Jane Smith",
+    "role": "Maintainer",
+    "batch": "2024",
+    "avatarUrl": "https://api.dicebear.com/7.x/avataaars/svg?seed=Jane",
+    "email": "jane.smith@nitrr.ac.in",
+    "githubUrl": "https://github.com/janesmith",
+    "linkedinUrl": "https://linkedin.com/in/janesmith",
+    "bio": "Managing technical infrastructure and code quality.",
+    "expertise": ["DevOps", "Code Review", "Architecture"]
+  },
+  {
+    "id": "3",
+    "name": "Dr. Faculty Name",
+    "role": "Lead",
+    "avatarUrl": "https://api.dicebear.com/7.x/avataaars/svg?seed=Faculty",
+    "email": "faculty@nitrr.ac.in",
+    "bio": "Providing guidance and oversight to the organization.",
+    "expertise": ["Research", "Mentorship", "Academia"]
+  }
+]

@@ -1,0 +1,23 @@
+[
+  {
+    "id": "1",
+    "title": "Improving Campus Navigation Using Graph Algorithms",
+    "abstract": "This research explores the implementation of graph-based algorithms for efficient campus navigation in the Class Locator project.",
+    "authors": ["Student Name 1", "Student Name 2"],
+    "publishedDate": "2025-08-15",
+    "conference": "International Conference on Computer Science",
+    "pdfUrl": "https://example.com/research-paper.pdf",
+    "githubUrl": "https://github.com/nitrr-oss/class-locator",
+    "tags": ["Algorithms", "Graph Theory", "Campus Navigation"]
+  },
+  {
+    "id": "2",
+    "title": "Optimizing Student Attendance Tracking Systems",
+    "abstract": "Analysis of various approaches to building scalable attendance tracking systems for educational institutions.",
+    "authors": ["Student Name 3"],
+    "publishedDate": "2025-06-20",
+    "pdfUrl": "https://example.com/research-paper-2.pdf",
+    "doi": "10.1234/example.doi",
+    "tags": ["System Design", "Scalability", "Education Technology"]
+  }
+]

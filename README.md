@@ -1,36 +1,245 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# NIT Raipur Open Source Organization Website
 
-## Getting Started
+> A modern, performant website for the NIT Raipur Open Source Organization - showcasing projects, contributors, events, and fostering open source culture.
 
-First, run the development server:
+![Next.js](https://img.shields.io/badge/Next.js-16.1.6-black?logo=next.js)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.9-blue?logo=typescript)
+![TailwindCSS](https://img.shields.io/badge/TailwindCSS-4.1-06B6D4?logo=tailwindcss)
+![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-47A248?logo=mongodb)
+
+## 🌟 Features
+
+- **📊 Analytics Dashboard**: Real-time stats on projects, contributors, and PRs
+- **🏆 Leaderboard**: Track top contributors with point-based system
+- **📅 Events**: Showcase upcoming contribution drives and past events
+- **🚀 Projects**: Browse all organization projects with filters and search
+- **📚 Research**: Display research papers and documentation
+- **👥 Team**: Meet the core team and faculty trustees
+- **🌙 Dark Mode**: Full dark mode support
+- **📱 Responsive**: Mobile-first design
+- **⚡ Fast**: Optimized with ISR and caching
+
+## 🛠️ Tech Stack
+
+- **Framework**: [Next.js 16.1.6](https://nextjs.org/) with App Router
+- **Language**: [TypeScript](https://www.typescriptlang.org/)
+- **Styling**: [TailwindCSS 4.1](https://tailwindcss.com/) + [shadcn/ui](https://ui.shadcn.com/)
+- **Database**: [MongoDB Atlas](https://www.mongodb.com/atlas)
+- **GitHub API**: [@octokit/rest](https://github.com/octokit/rest.js)
+- **Data Fetching**: [TanStack Query](https://tanstack.com/query)
+- **Charts**: [Recharts](https://recharts.org/)
+- **Validation**: [Zod](https://zod.dev/)
+- **Deployment**: [Vercel](https://vercel.com/)
+
+## 📦 Getting Started
+
+### Prerequisites
+
+- Node.js 18+ and pnpm
+- MongoDB Atlas account (free tier)
+- GitHub Personal Access Token
+
+### Installation
+
+1. **Clone the repository**
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/your-org/nitrr-oss-website.git
+cd nitrr-oss-website/nitrr-oss-website
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. **Install dependencies**
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+pnpm install
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+3. **Set up environment variables**
 
-## Learn More
+Create a `.env.local` file:
 
-To learn more about Next.js, take a look at the following resources:
+```env
+# GitHub Configuration
+GITHUB_TOKEN=your_github_token_here
+GITHUB_ORG_NAME=nitrr-oss
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+# MongoDB Configuration
+MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/nitrr-oss
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+# Site Configuration
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
 
-## Deploy on Vercel
+# Cache Update Secret
+CACHE_UPDATE_SECRET=your_random_secret_key
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+4. **Run the development server**
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+pnpm dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+## 📂 Project Structure
+
+```
+nitrr-oss-website/
+├── public/               # Static assets
+│   └── images/
+├── src/
+│   ├── app/             # Next.js App Router pages
+│   │   ├── api/         # API routes
+│   │   ├── projects/    # Projects page
+│   │   ├── leaderboard/ # Leaderboard page
+│   │   └── ...
+│   ├── components/      # React components
+│   │   ├── ui/          # shadcn/ui components
+│   │   ├── layout/      # Layout components
+│   │   ├── home/        # Homepage components
+│   │   └── ...
+│   ├── lib/             # Utilities and helpers
+│   │   ├── db/          # Database models and connection
+│   │   ├── github/      # GitHub API integration
+│   │   └── utils/       # Utility functions
+│   ├── data/            # JSON data files
+│   ├── types/           # TypeScript type definitions
+│   └── ...
+├── .env.example         # Environment variables template
+├── ROADMAP.md           # Project roadmap with tasks
+└── package.json
+```
+
+## 🚀 Available Scripts
+
+```bash
+pnpm dev          # Start development server
+pnpm build        # Build for production
+pnpm start        # Start production server
+pnpm lint         # Run ESLint
+pnpm lint:fix     # Fix linting issues
+pnpm format       # Format code with Prettier
+pnpm type-check   # Check TypeScript types
+```
+
+## 🔄 Data Flow
+
+```
+GitHub API → API Routes → MongoDB Cache → Frontend
+     ↓            ↓              ↓            ↓
+  (Source)   (Fetcher)      (Storage)   (Consumer)
+```
+
+### Caching Strategy
+
+- **Projects**: Update every 12 hours
+- **Contributors**: Update every 24 hours
+- **Stats**: Update every 6 hours
+- **Leaderboard**: Update every 1 hour
+
+Automated updates via GitHub Actions (3x daily).
+
+## 🎨 Customization
+
+### Adding New Components
+
+Use shadcn/ui CLI to add components:
+
+```bash
+pnpm dlx shadcn@latest add [component-name]
+```
+
+### Updating Manual Data
+
+Edit JSON files in `src/data/`:
+
+- `events.json` - Event information
+- `team.json` - Team members
+- `researches.json` - Research papers
+- `faq.json` - FAQ entries
+
+### Modifying Constants
+
+Edit `src/lib/constants.ts` for site-wide settings:
+
+- Site name and URLs
+- Cache durations
+- Point values
+- Team roles
+
+## 📊 MongoDB Collections
+
+The app uses three main collections:
+
+1. **projects**: Cached GitHub repository data
+2. **contributors**: Aggregated contributor stats and points
+3. **orgStats**: Organization-wide statistics
+
+## 🔐 Environment Variables
+
+| Variable               | Description                  | Required |
+| ---------------------- | ---------------------------- | -------- |
+| `GITHUB_TOKEN`         | GitHub Personal Access Token | Yes      |
+| `GITHUB_ORG_NAME`      | GitHub organization name     | Yes      |
+| `MONGODB_URI`          | MongoDB connection string    | Yes      |
+| `NEXT_PUBLIC_SITE_URL` | Public site URL              | Yes      |
+| `CACHE_UPDATE_SECRET`  | Secret for cache update API  | Yes      |
+
+## 🚢 Deployment
+
+### Deploy to Vercel (Recommended)
+
+1. Push code to GitHub
+2. Import project in Vercel
+3. Add environment variables
+4. Deploy!
+
+Vercel will automatically:
+
+- Build the project
+- Set up CDN
+- Enable automatic deployments
+
+### GitHub Actions
+
+The project includes workflows for:
+
+- CI/CD pipeline (linting, type checking)
+- Scheduled cache updates (3x daily)
+
+## 🤝 Contributing
+
+We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+
+### Development Workflow
+
+1. Create a new branch
+2. Make your changes
+3. Run linting and type checks
+4. Submit a pull request
+
+Pre-commit hooks will automatically:
+
+- Format code with Prettier
+- Lint with ESLint
+
+## 📝 License
+
+This project is licensed under the MIT License - see [LICENSE](LICENSE) for details.
+
+## 🙏 Acknowledgments
+
+- Built with [Next.js](https://nextjs.org/)
+- UI components from [shadcn/ui](https://ui.shadcn.com/)
+- Icons from [Lucide](https://lucide.dev/)
+- Deployed on [Vercel](https://vercel.com/)
+
+## 📧 Contact
+
+- **Email**: To be added
+- **GitHub**: [github.com/nitrr-oss](https://github.com/NITRR-Official)
+- **Discord**: [Join our server](https://discord.gg/nitrr-oss)
+
+---
+
+Made with ❤️ by the NIT Raipur Open Source Community

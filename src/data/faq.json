@@ -1,0 +1,44 @@
+[
+  {
+    "id": "1",
+    "category": "Getting Started",
+    "question": "How do I join the organization?",
+    "answer": "To join, start by contributing to any of our projects. Check the Projects page, pick a project that interests you, and look for issues labeled 'good first issue'. Once you've made a few quality contributions, you can apply to become a maintainer."
+  },
+  {
+    "id": "2",
+    "category": "Getting Started",
+    "question": "Do I need to be from NIT Raipur to contribute?",
+    "answer": "While the organization is based at NIT Raipur and primarily serves our students, we welcome contributions from anyone! However, core team positions and maintainer roles are reserved for NIT Raipur students."
+  },
+  {
+    "id": "3",
+    "category": "Contributing",
+    "question": "How are contribution points calculated?",
+    "answer": "Points are awarded based on PR difficulty: Easy issues = 10 points, Medium issues = 20 points, Hard issues = 30 points. The difficulty is determined by issue labels set by project maintainers."
+  },
+  {
+    "id": "4",
+    "category": "Contributing",
+    "question": "What happens after I submit a PR?",
+    "answer": "Project maintainers will review your PR. They may request changes or approve it directly. Once approved and merged, your contribution will be reflected on the leaderboard within 24 hours."
+  },
+  {
+    "id": "5",
+    "category": "Events",
+    "question": "What are contribution drives?",
+    "answer": "Contribution drives are competitive events (usually during fests) where students earn points for contributing to projects. Top contributors receive prizes, certificates, and recognition."
+  },
+  {
+    "id": "6",
+    "category": "Projects",
+    "question": "How do I propose a new project?",
+    "answer": "New project proposals are reviewed by the core team. Contact us via email or Discord with your project idea, including scope, tech stack, and team. Projects must have at least 2 committed maintainers."
+  },
+  {
+    "id": "7",
+    "category": "Projects",
+    "question": "What does 'Dormant' status mean?",
+    "answer": "Dormant projects have reduced activity but are not archived. They're open for revival if new maintainers step up. Archived projects are no longer maintained."
+  }
+]
