@@ -12,21 +12,42 @@ export type TeamRole =
   | "Project Liaison"
   | "Faculty Trustee";
 
+export interface ProjectRepository {
+  name: string;
+  url: string;
+  description: string;
+  role: string;
+}
+
+export interface ProjectLink {
+  label: string;
+  url: string;
+}
+
+export interface ProjectContributor {
+  name: string;
+  role: string;
+  githubUrl?: string;
+}
+
 export interface Project {
   id: string;
+  slug: string;
   name: string;
+  tagline: string;
   description: string;
-  url: string;
-  githubUrl: string;
-  stars: number;
-  forks: number;
-  openIssues: number;
-  languages: string[];
-  maintainers: string[];
   status: ProjectStatus;
-  difficulty: DifficultyLevel;
-  updatedAt: Date;
-  cachedAt: Date;
+  tags: string[];
+  stack: string[];
+  repositories: ProjectRepository[];
+  links: ProjectLink[];
+  problemStatement: string;
+  scope: string[];
+  goals: string[];
+  impact: string[];
+  roadmap: string[];
+  contributors: ProjectContributor[];
+  featured: boolean;
 }
 
 export interface Contributor {

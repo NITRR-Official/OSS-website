@@ -1,6 +1,7 @@
 "use client";
 
 import { Card } from "@/components/ui/card";
+import { useEffect, useState } from "react";
 import {
   Area,
   AreaChart,
@@ -23,6 +24,25 @@ interface ActivityChartProps {
 }
 
 export function ActivityChart({ data }: ActivityChartProps) {
+  const [isDark, setIsDark] = useState(
+    typeof document !== "undefined" && document.documentElement.classList.contains("dark")
+  );
+
+  useEffect(() => {
+    // Listen for theme changes
+    const observer = new MutationObserver(() => {
+      const dark = document.documentElement.classList.contains("dark");
+      setIsDark(dark);
+    });
+
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+
+    return () => observer.disconnect();
+  }, []);
+
+  const tickColor = isDark ? "#ffffff" : "#000000";
+  const gridStroke = isDark ? "rgba(148, 163, 184, 0.25)" : "rgba(100, 116, 139, 0.15)";
+
   return (
     <Card className="p-6">
       <h3 className="text-lg font-semibold mb-4">Activity Overview</h3>
@@ -42,14 +62,21 @@ export function ActivityChart({ data }: ActivityChartProps) {
               <stop offset="95%" stopColor="#f59e0b" stopOpacity={0} />
             </linearGradient>
           </defs>
-          <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
-          <XAxis dataKey="month" className="text-xs" tickLine={false} axisLine={false} />
-          <YAxis className="text-xs" tickLine={false} axisLine={false} />
+          <CartesianGrid strokeDasharray="3 3" stroke={gridStroke} strokeOpacity={1} />
+          <XAxis
+            dataKey="month"
+            className="text-xs"
+            tickLine={false}
+            axisLine={false}
+            tick={{ fill: tickColor }}
+          />
+          <YAxis className="text-xs" tickLine={false} axisLine={false} tick={{ fill: tickColor }} />
           <Tooltip
             contentStyle={{
-              backgroundColor: "hsl(var(--background))",
-              border: "1px solid hsl(var(--border))",
+              backgroundColor: isDark ? "#1e293b" : "#f1f5f9",
+              border: isDark ? "1px solid #475569" : "1px solid #e2e8f0",
               borderRadius: "8px",
+              color: isDark ? "#ffffff" : "#000000",
             }}
           />
           <Area

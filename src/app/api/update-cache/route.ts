@@ -1,9 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import dbConnect from "@/lib/db/mongodb";
-import Project from "@/lib/db/models/Project";
 import Contributor from "@/lib/db/models/Contributor";
 import OrgStats from "@/lib/db/models/Stats";
-import { fetchAllProjects } from "@/lib/github/projects";
 import { fetchAllContributors } from "@/lib/github/contributors";
 import { calculateOrgStats } from "@/lib/github/stats";
 
@@ -34,8 +32,7 @@ export async function POST(request: NextRequest) {
 
     // Update all caches in parallel
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [projects, contributors, stats] = await Promise.all([
-      updateProjectsCache(),
+    const [contributors, stats] = await Promise.all([
       updateContributorsCache(),
       updateStatsCache(),
     ]);
@@ -44,7 +41,6 @@ export async function POST(request: NextRequest) {
       success: true,
       message: "Cache updated successfully",
       updated: {
-        projects: projects.count,
         contributors: contributors.count,
         stats: true,
       },
@@ -58,14 +54,6 @@ export async function POST(request: NextRequest) {
       { status: 500 }
     );
   }
-}
-
-async function updateProjectsCache() {
-  console.log("Updating projects cache...");
-  const freshProjects = await fetchAllProjects();
-  await Project.deleteMany({});
-  await Project.insertMany(freshProjects);
-  return { count: freshProjects.length };
 }
 
 async function updateContributorsCache() {

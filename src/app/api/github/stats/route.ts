@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import dbConnect from "@/lib/db/mongodb";
 import OrgStats from "@/lib/db/models/Stats";
 import { calculateOrgStats } from "@/lib/github/stats";
@@ -10,8 +10,11 @@ export const dynamic = "force-dynamic";
  * GET /api/github/stats
  * Fetch organization statistics with caching
  */
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
+    const forceRefresh =
+      request.nextUrl.searchParams.get("refresh") === "1" ||
+      request.nextUrl.searchParams.get("refresh") === "true";
     // Try to connect to MongoDB for caching
     let useCache = true;
     try {
@@ -21,16 +24,20 @@ export async function GET() {
       useCache = false;
     }
 
-    if (useCache) {
+    if (useCache && !forceRefresh) {
       // Check if we have cached data
       const cachedStats = await OrgStats.findOne().sort({ updatedAt: -1 });
 
       if (cachedStats) {
-        // Check if cache is still fresh (6 hours)
+        // Check if cache is still fresh
         const cacheAge = Date.now() - cachedStats.updatedAt.getTime();
         const isFresh = cacheAge < CACHE_DURATIONS.stats * 1000;
+        const hasMeaningfulData =
+          cachedStats.totalProjects > 0 ||
+          cachedStats.totalContributors > 0 ||
+          cachedStats.totalStars > 0;
 
-        if (isFresh) {
+        if (isFresh && hasMeaningfulData) {
           return NextResponse.json({
             data: cachedStats,
             cached: true,

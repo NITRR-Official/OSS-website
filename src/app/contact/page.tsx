@@ -2,7 +2,7 @@ import { Container } from "@/components/layout/Container";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Mail, MessageSquare, Github, MapPin } from "lucide-react";
+import { Mail, MessageSquare, Github, MapPin, AlertCircle } from "lucide-react";
 import Link from "next/link";
 import { SITE_CONFIG } from "@/lib/constants";
 
@@ -105,39 +105,56 @@ export default function ContactPage() {
 
           {/* Contact Form */}
           <div>
+            {/* Notice Banner */}
+            <Card className="p-4 mb-6 border-yellow-200 bg-yellow-50 dark:bg-yellow-900/20 dark:border-yellow-800">
+              <div className="flex items-start gap-3">
+                <AlertCircle className="h-5 w-5 text-yellow-600 dark:text-yellow-500 flex-shrink-0 mt-0.5" />
+                <div>
+                  <h3 className="font-semibold text-yellow-900 dark:text-yellow-200 mb-1">
+                    Contact Form Unavailable
+                  </h3>
+                  <p className="text-sm text-yellow-800 dark:text-yellow-300">
+                    The contact form is currently not operational. Please use the alternative
+                    methods to reach us:
+                    <strong className="block mt-2">Email or Discord</strong>
+                  </p>
+                </div>
+              </div>
+            </Card>
+
             <Card className="p-6">
               <h2 className="text-xl font-semibold mb-6">Send us a message</h2>
               <form className="space-y-4">
                 <div>
                   <label className="text-sm font-medium mb-2 block">Name</label>
-                  <Input placeholder="Your name" />
+                  <Input placeholder="Your name" disabled />
                 </div>
 
                 <div>
                   <label className="text-sm font-medium mb-2 block">Email</label>
-                  <Input type="email" placeholder="your.email@example.com" />
+                  <Input type="email" placeholder="your.email@example.com" disabled />
                 </div>
 
                 <div>
                   <label className="text-sm font-medium mb-2 block">Subject</label>
-                  <Input placeholder="What is this about?" />
+                  <Input placeholder="What is this about?" disabled />
                 </div>
 
                 <div>
                   <label className="text-sm font-medium mb-2 block">Message</label>
                   <textarea
-                    className="w-full min-h-37.5 px-3 py-2 rounded-md border border-input bg-background text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                    className="w-full min-h-37.5 px-3 py-2 rounded-md border border-input bg-background text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
                     placeholder="Your message..."
+                    disabled
                   />
                 </div>
 
-                <Button type="submit" className="w-full">
+                <Button type="submit" className="w-full" disabled>
                   Send Message
                 </Button>
 
                 <p className="text-xs text-muted-foreground text-center">
-                  Note: This form is for display purposes. Please use email or Discord for actual
-                  communication.
+                  Please use email or Discord for communication.
                 </p>
               </form>
             </Card>

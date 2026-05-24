@@ -1,4 +1,5 @@
 import { Octokit } from "@octokit/rest";
+import { GITHUB_CONFIG } from "../constants";
 
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 
@@ -13,7 +14,7 @@ if (!GITHUB_TOKEN) {
  */
 export const octokit = new Octokit({
   auth: GITHUB_TOKEN,
-  userAgent: "NITRR-OSS-Website/1.0.0",
+  userAgent: GITHUB_CONFIG.USER_AGENT,
   throttle: {
     onRateLimit: (retryAfter: number, options: Record<string, unknown>) => {
       console.warn(`Request quota exhausted for request ${options.method} ${options.url}`);

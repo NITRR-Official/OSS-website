@@ -14,15 +14,23 @@ interface ProjectsClientProps {
 export function ProjectsClient({ projects }: ProjectsClientProps) {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
-  const [difficultyFilter, setDifficultyFilter] = useState("all");
-  const [languageFilter, setLanguageFilter] = useState("all");
+  const [tagFilter, setTagFilter] = useState("all");
+  const [stackFilter, setStackFilter] = useState("all");
 
-  const availableLanguages = useMemo(() => {
-    const languages = new Set<string>();
+  const availableTags = useMemo(() => {
+    const tags = new Set<string>();
     projects.forEach((project) => {
-      project.languages.forEach((lang) => languages.add(lang));
+      project.tags.forEach((tag) => tags.add(tag));
     });
-    return Array.from(languages).sort();
+    return Array.from(tags).sort();
+  }, [projects]);
+
+  const availableStacks = useMemo(() => {
+    const stacks = new Set<string>();
+    projects.forEach((project) => {
+      project.stack.forEach((stack) => stacks.add(stack));
+    });
+    return Array.from(stacks).sort();
   }, [projects]);
 
   const filteredProjects = useMemo(() => {
@@ -30,19 +38,18 @@ export function ProjectsClient({ projects }: ProjectsClientProps) {
       const matchesSearch =
         search === "" ||
         project.name.toLowerCase().includes(search.toLowerCase()) ||
+        project.tagline.toLowerCase().includes(search.toLowerCase()) ||
         project.description.toLowerCase().includes(search.toLowerCase());
 
       const matchesStatus = statusFilter === "all" || project.status === statusFilter;
 
-      const matchesDifficulty =
-        difficultyFilter === "all" || project.difficulty === difficultyFilter;
+      const matchesTag = tagFilter === "all" || project.tags.includes(tagFilter);
 
-      const matchesLanguage =
-        languageFilter === "all" || project.languages.includes(languageFilter);
+      const matchesStack = stackFilter === "all" || project.stack.includes(stackFilter);
 
-      return matchesSearch && matchesStatus && matchesDifficulty && matchesLanguage;
+      return matchesSearch && matchesStatus && matchesTag && matchesStack;
     });
-  }, [projects, search, statusFilter, difficultyFilter, languageFilter]);
+  }, [projects, search, statusFilter, tagFilter, stackFilter]);
 
   return (
     <div className="py-12">
@@ -58,9 +65,10 @@ export function ProjectsClient({ projects }: ProjectsClientProps) {
           <ProjectFilters
             onSearchChange={setSearch}
             onStatusChange={setStatusFilter}
-            onDifficultyChange={setDifficultyFilter}
-            onLanguageChange={setLanguageFilter}
-            availableLanguages={availableLanguages}
+            onTagChange={setTagFilter}
+            onStackChange={setStackFilter}
+            availableTags={availableTags}
+            availableStacks={availableStacks}
           />
         </div>
 
@@ -71,7 +79,7 @@ export function ProjectsClient({ projects }: ProjectsClientProps) {
         ) : (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredProjects.map((project) => (
-              <ProjectCard key={project.githubUrl} project={project} />
+              <ProjectCard key={project.slug} project={project} />
             ))}
           </div>
         )}

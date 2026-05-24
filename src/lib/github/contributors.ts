@@ -1,5 +1,5 @@
 import { octokit } from "./client";
-import { SITE_CONFIG } from "../constants";
+import { SITE_CONFIG, GITHUB_CONFIG } from "../constants";
 import { calculatePoints } from "../utils/points";
 import { Contributor, Contribution } from "@/types";
 
@@ -11,7 +11,7 @@ export async function fetchRepoContributors(owner: string, repo: string) {
     const { data } = await octokit.repos.listContributors({
       owner,
       repo,
-      per_page: 100,
+      per_page: GITHUB_CONFIG.PAGINATION_LIMIT,
     });
 
     return data;
@@ -32,7 +32,7 @@ export async function fetchMergedPRs(owner: string, repo: string) {
       state: "closed",
       sort: "updated",
       direction: "desc",
-      per_page: 100,
+      per_page: GITHUB_CONFIG.PAGINATION_LIMIT,
     });
 
     // Filter only merged PRs
@@ -53,7 +53,7 @@ async function fetchAllOrgRepos() {
     const { data } = await octokit.repos.listForOrg({
       org: SITE_CONFIG.orgName,
       type: "public",
-      per_page: 100,
+      per_page: GITHUB_CONFIG.PAGINATION_LIMIT,
     });
 
     return data;

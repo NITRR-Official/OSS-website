@@ -14,17 +14,19 @@ import { Search } from "lucide-react";
 interface ProjectFiltersProps {
   onSearchChange: (search: string) => void;
   onStatusChange: (status: string) => void;
-  onDifficultyChange: (difficulty: string) => void;
-  onLanguageChange: (language: string) => void;
-  availableLanguages: string[];
+  onTagChange: (tag: string) => void;
+  onStackChange: (stack: string) => void;
+  availableTags: string[];
+  availableStacks: string[];
 }
 
 export function ProjectFilters({
   onSearchChange,
   onStatusChange,
-  onDifficultyChange,
-  onLanguageChange,
-  availableLanguages,
+  onTagChange,
+  onStackChange,
+  availableTags,
+  availableStacks,
 }: ProjectFiltersProps) {
   const [search, setSearch] = useState("");
 
@@ -58,27 +60,29 @@ export function ProjectFilters({
           </SelectContent>
         </Select>
 
-        <Select onValueChange={onDifficultyChange}>
+        <Select onValueChange={onTagChange}>
           <SelectTrigger>
-            <SelectValue placeholder="Filter by difficulty" />
+            <SelectValue placeholder="Filter by category" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All Difficulty</SelectItem>
-            <SelectItem value="Easy">Easy</SelectItem>
-            <SelectItem value="Medium">Medium</SelectItem>
-            <SelectItem value="Hard">Hard</SelectItem>
+            <SelectItem value="all">All Categories</SelectItem>
+            {availableTags.map((tag) => (
+              <SelectItem key={tag} value={tag}>
+                {tag}
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
 
-        <Select onValueChange={onLanguageChange}>
+        <Select onValueChange={onStackChange}>
           <SelectTrigger>
-            <SelectValue placeholder="Filter by language" />
+            <SelectValue placeholder="Filter by stack" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All Languages</SelectItem>
-            {availableLanguages.map((lang) => (
-              <SelectItem key={lang} value={lang}>
-                {lang}
+            <SelectItem value="all">All Stacks</SelectItem>
+            {availableStacks.map((stack) => (
+              <SelectItem key={stack} value={stack}>
+                {stack}
               </SelectItem>
             ))}
           </SelectContent>

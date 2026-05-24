@@ -1,6 +1,7 @@
 import { Container } from "@/components/layout/Container";
 import { Card } from "@/components/ui/card";
-import { AlertTriangle, Mail, MessageSquare } from "lucide-react";
+import { AlertTriangle, MessageSquare } from "lucide-react";
+import { SITE_CONFIG } from "@/lib/constants";
 
 export const metadata = {
   title: "Code of Conduct - NITRR OSS",
@@ -121,20 +122,20 @@ export default function CodeOfConductPage() {
           report it by contacting us through one of the following channels:
         </p>
         <div className="grid gap-4 sm:grid-cols-2">
-          <div className="flex items-center gap-3">
+          {/* <div className="flex items-center gap-3">
             <div className="p-2 bg-primary/10 rounded-lg">
               <Mail className="h-5 w-5 text-primary" />
             </div>
             <div>
               <p className="font-medium">Email</p>
               <a
-                href="mailto:opensource@nitrr.ac.in"
+                href={`mailto:${SITE_CONFIG.links.email}`}
                 className="text-sm text-primary hover:underline"
               >
-                opensource@nitrr.ac.in
+                {SITE_CONFIG.links.email}
               </a>
             </div>
-          </div>
+          </div> */}
           <div className="flex items-center gap-3">
             <div className="p-2 bg-primary/10 rounded-lg">
               <MessageSquare className="h-5 w-5 text-primary" />
@@ -142,7 +143,7 @@ export default function CodeOfConductPage() {
             <div>
               <p className="font-medium">Discord</p>
               <a
-                href="https://discord.gg/your-invite-link"
+                href={SITE_CONFIG.links.discord}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-sm text-primary hover:underline"

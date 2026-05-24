@@ -19,14 +19,16 @@ import { FeaturedProjects } from "@/components/home/FeaturedProjects";
 import { AnimatedBackground } from "@/components/home/AnimatedBackground";
 import { Skeleton } from "@/components/ui/skeleton";
 import { SITE_CONFIG } from "@/lib/constants";
-import { OrgStats, Project } from "@/types";
+import { getProjects } from "@/lib/projects";
+import { formatNumber } from "@/lib/utils";
+import { OrgStats } from "@/types";
 
 async function getStats(): Promise<OrgStats | null> {
   try {
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"}/api/github/stats`,
       {
-        next: { revalidate: 3600 }, // Revalidate every hour
+        cache: "no-store",
       }
     );
 
@@ -42,31 +44,9 @@ async function getStats(): Promise<OrgStats | null> {
   }
 }
 
-async function getProjects(): Promise<Project[]> {
-  try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"}/api/github/projects`,
-      {
-        next: { revalidate: 0 }, // Always fetch fresh in dev
-        cache: "no-store",
-      }
-    );
-
-    if (!res.ok) {
-      console.error("Failed to fetch projects:", res.status);
-      return [];
-    }
-
-    const data = await res.json();
-    return data.data || [];
-  } catch (error) {
-    console.error("Error fetching projects:", error);
-    return [];
-  }
-}
-
 export default async function Home() {
-  const [stats, projects] = await Promise.all([getStats(), getProjects()]);
+  const stats = await getStats();
+  const projects = getProjects();
 
   return (
     <div>
@@ -121,26 +101,26 @@ export default async function Home() {
               <div className="mb-12 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
                 <StatsCard
                   icon={Code2}
-                  title="Total Projects"
-                  value={stats.totalProjects}
-                  description="Active and maintained"
+                  title="Total Repositories"
+                  value={formatNumber(stats.totalProjects)}
+                  description="Public repos (lifetime)"
                 />
                 <StatsCard
                   icon={Users}
                   title="Contributors"
-                  value={stats.totalContributors}
-                  description="From all batches"
+                  value={formatNumber(stats.totalContributors)}
+                  description="All time contributors"
                 />
                 <StatsCard
                   icon={GitPullRequest}
                   title="Pull Requests"
-                  value={stats.totalPRsMerged}
-                  description="Merged successfully"
+                  value={formatNumber(stats.totalPRsMerged)}
+                  description="Merged (lifetime)"
                 />
                 <StatsCard
                   icon={Star}
                   title="Total Stars"
-                  value={stats.totalStars}
+                  value={formatNumber(stats.totalStars)}
                   description="Across all repos"
                 />
               </div>
@@ -173,9 +153,9 @@ export default async function Home() {
               <Code2 className="mx-auto h-12 w-12 text-muted-foreground" />
               <h3 className="mt-4 text-lg font-semibold">No Projects Yet</h3>
               <p className="mt-2 text-sm text-muted-foreground">
-                Configure your GitHub token and organization name to see projects.
+                Our project registry is being curated.
                 <br />
-                Check SETUP.md for instructions.
+                Check back soon for detailed project pages.
               </p>
             </div>
           </Container>

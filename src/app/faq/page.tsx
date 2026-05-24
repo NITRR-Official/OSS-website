@@ -8,6 +8,7 @@ import {
 import { Card } from "@/components/ui/card";
 import { FAQ } from "@/types/faq";
 import faqData from "@/data/faq.json";
+import { SITE_CONFIG } from "@/lib/constants";
 
 export const metadata = {
   title: "FAQ - NITRR OSS",
@@ -61,17 +62,20 @@ export default function FAQPage() {
         </p>
         <div className="flex gap-4 justify-center flex-wrap">
           <a
-            href="https://discord.gg/your-invite-link"
+            href={SITE_CONFIG.links.discord}
             target="_blank"
             rel="noopener noreferrer"
             className="text-primary hover:underline"
           >
             Join our Discord
           </a>
-          <span className="text-muted-foreground">•</span>
-          <a href="mailto:opensource@nitrr.ac.in" className="text-primary hover:underline">
+          {
+            // Email will be added after we get an official email id
+            /* <span className="text-muted-foreground">•</span>
+          <a href={`mailto:${SITE_CONFIG.links.email}`} className="text-primary hover:underline">
             Email us
-          </a>
+          </a> */
+          }
         </div>
       </Card>
     </Container>

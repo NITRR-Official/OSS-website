@@ -3,14 +3,15 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Project } from "@/types";
-import { Star, GitFork, AlertCircle, ExternalLink } from "lucide-react";
+import { ArrowRight, GitBranch } from "lucide-react";
 
 interface FeaturedProjectsProps {
   projects: Project[];
 }
 
 export function FeaturedProjects({ projects }: FeaturedProjectsProps) {
-  const topProjects = projects.sort((a, b) => b.stars - a.stars).slice(0, 4);
+  const featuredProjects = projects.filter((project) => project.featured).slice(0, 4);
+  const topProjects = featuredProjects.length > 0 ? featuredProjects : projects.slice(0, 4);
 
   return (
     <div className="space-y-4">
@@ -23,7 +24,7 @@ export function FeaturedProjects({ projects }: FeaturedProjectsProps) {
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {topProjects.map((project) => (
           <Card
-            key={project.githubUrl}
+            key={project.slug}
             className="flex flex-col p-6 transition-all hover:shadow-lg dark:hover:shadow-primary/10"
           >
             <div className="flex-1">
@@ -42,41 +43,31 @@ export function FeaturedProjects({ projects }: FeaturedProjectsProps) {
                   {project.status}
                 </Badge>
               </div>
-              <p className="mb-4 line-clamp-2 text-sm text-muted-foreground">
-                {project.description}
-              </p>
+              <p className="mb-4 line-clamp-2 text-sm text-muted-foreground">{project.tagline}</p>
               <div className="mb-4 flex flex-wrap gap-1">
-                {project.languages.slice(0, 3).map((tech) => (
+                {project.stack.slice(0, 3).map((tech) => (
                   <Badge key={tech} variant="outline" className="text-xs">
                     {tech}
                   </Badge>
                 ))}
-                {project.languages.length > 3 && (
+                {project.stack.length > 3 && (
                   <Badge variant="outline" className="text-xs">
-                    +{project.languages.length - 3}
+                    +{project.stack.length - 3}
                   </Badge>
                 )}
               </div>
               <div className="flex items-center gap-4 text-sm text-muted-foreground">
                 <div className="flex items-center gap-1">
-                  <Star className="h-4 w-4" />
-                  <span>{project.stars}</span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <GitFork className="h-4 w-4" />
-                  <span>{project.forks}</span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <AlertCircle className="h-4 w-4" />
-                  <span>{project.openIssues}</span>
+                  <GitBranch className="h-4 w-4" />
+                  <span>{project.repositories.length} repos</span>
                 </div>
               </div>
             </div>
             <Button variant="ghost" size="sm" className="mt-4 w-full" asChild>
-              <a href={project.githubUrl} target="_blank" rel="noopener noreferrer">
-                View on GitHub
-                <ExternalLink className="ml-2 h-4 w-4" />
-              </a>
+              <Link href={`/projects/${project.slug}`}>
+                View Project
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
             </Button>
           </Card>
         ))}

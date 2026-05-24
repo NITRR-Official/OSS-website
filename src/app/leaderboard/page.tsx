@@ -78,8 +78,8 @@ export default async function LeaderboardPage() {
             <h3 className="font-semibold mb-2">How Points Work</h3>
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li>• Easy PRs: 10 points</li>
-              <li>• Medium PRs: 20 points</li>
-              <li>• Hard PRs: 30 points</li>
+              <li>• Medium PRs: 25 points</li>
+              <li>• Hard PRs: 50 points</li>
               <li>• PRs without difficulty labels: 10 points (default)</li>
             </ul>
           </div>

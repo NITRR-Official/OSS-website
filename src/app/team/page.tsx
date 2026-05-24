@@ -23,7 +23,7 @@ export default function TeamPage() {
   );
 
   // Define role order for display
-  const roleOrder = ["Lead", "Maintainer", "Core Contributor", "Contributor"];
+  const roleOrder = ["Founding Member", "Lead", "Maintainer", "Core Contributor", "Contributor"];
   const orderedRoles = roleOrder.filter((role) => groupedTeam[role]);
 
   return (
