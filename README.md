@@ -7,6 +7,9 @@
 ![TailwindCSS](https://img.shields.io/badge/TailwindCSS-4.1-06B6D4?logo=tailwindcss)
 ![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-47A248?logo=mongodb)
 
+![](public/images/assets/image.png)
+![](public/images/assets/image2.png)
+
 ## 🌟 Features
 
 - **📊 Analytics Dashboard**: Real-time stats on projects, contributors, and PRs
