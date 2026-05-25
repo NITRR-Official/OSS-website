@@ -3,216 +3,199 @@
     "id": "campusos",
     "slug": "campusos",
     "name": "CampusOS",
-    "tagline": "Unified student services platform for campus life",
-    "description": "CampusOS consolidates attendance, events, room booking, and announcements into a single open platform for students and staff.",
+    "tagline": "Unified student services and activity platform for campus life",
+    "description": "A modular, multi-tenant Campus Operating System for managing the complete lifecycle of campus activities, including clubs, events, tasks, operations, and growth.",
     "status": "Active",
-    "tags": ["Platform", "Student Services", "Campus"],
-    "stack": ["Next.js", "Node.js", "PostgreSQL", "Docker"],
+    "tags": ["Platform", "Student Services", "Campus", "Plugin Architecture"],
+    "stack": ["Next.js", "Express", "MongoDB", "Tailwind CSS", "shadcn/ui"],
     "repositories": [
       {
-        "name": "CampusOS-frontend",
-        "url": "https://github.com/NITRR-Official/CampusOS-frontend",
-        "description": "Student portal and admin dashboard.",
-        "role": "frontend"
-      },
-      {
-        "name": "CampusOS-backend",
-        "url": "https://github.com/NITRR-Official/CampusOS-backend",
-        "description": "Core APIs and business workflows.",
-        "role": "backend"
-      },
-      {
-        "name": "CampusOS-mobile",
-        "url": "https://github.com/NITRR-Official/CampusOS-mobile",
-        "description": "Mobile companion app for students.",
-        "role": "mobile"
-      },
-      {
-        "name": "CampusOS-infra",
-        "url": "https://github.com/NITRR-Official/CampusOS-infra",
-        "description": "Deployment automation and observability.",
-        "role": "infrastructure"
+        "name": "CampusOS",
+        "url": "https://github.com/NITRR-Official/CampusOS",
+        "description": "Unified monorepo containing both frontend, backend, apps, and documentation.",
+        "role": "monorepo"
       }
     ],
     "links": [
       {
-        "label": "Docs",
-        "url": "https://github.com/NITRR-Official/CampusOS-frontend#readme"
-      },
-      {
-        "label": "Demo",
-        "url": "https://campusos.nitrr-oss.dev"
+        "label": "Documentation Hub",
+        "url": "https://github.com/NITRR-Official/CampusOS/blob/dev/docs/README.md"
       }
     ],
-    "problemStatement": "Students and staff rely on disconnected tools for attendance, announcements, and bookings, which slows workflows and reduces adoption.",
+    "problemStatement": "Campus activity management is fragmented and chaotic, relying on scattered WhatsApp messages, inconsistent Google Sheets, and email chains. This results in coordination chaos, data duplication, vendor fragmentation, lack of historical memory, and poor accountability for task completion.",
     "scope": [
-      "Unified authentication and student profiles",
-      "Announcements, events, and notices",
-      "Room and lab booking workflows",
-      "Admin dashboards for approvals"
+      "Stateless JWT Authentication and RBAC (admin, coordinator, volunteer)",
+      "Event CRUD, registration capacity handling, and public event listing",
+      "Task assignment with priority, status, and circular dependency checks",
+      "Live check-in support with QR codes and attendance dashboards",
+      "Operations layer modules: Vendor, Resource, Scheduling, and Budget tracking"
     ],
     "goals": [
-      "Provide a single entry point for student services",
-      "Reduce duplicated data across departments",
-      "Enable maintainers to ship features independently"
+      "Centralize coordination of clubs, events, and operations into a single open platform",
+      "Establish a modular, plug-and-play architecture for independent feature development",
+      "Provide a secure, reliable, and user-friendly experience for students and organizers"
     ],
     "impact": [
-      "Streamlined access to campus services",
-      "Faster onboarding for new students",
-      "Improved coordination across departments"
+      "Saves club organizers 10+ hours/week in logistics and coordination overhead",
+      "Prevents resource double-booking and detects scheduling conflicts",
+      "Maintains institutional memory of past events, budgets, and tasks"
     ],
     "roadmap": [
-      "Integrate QR-based attendance",
-      "Add mobile companion app",
-      "Deploy multi-campus tenancy"
+      "Phase 6: Growth Layer (Sponsorship deals, marketing campaigns, and dashboards)",
+      "Phase 7: System Maturity (In-app notifications, audit logs, file uploads, and analytics)"
     ],
     "contributors": [
       {
-        "name": "Aarav Singh",
+        "name": "TheFakeCreator",
         "role": "Lead Coordinator",
-        "githubUrl": "https://github.com/aarav-singh"
+        "githubUrl": "https://github.com/TheFakeCreator"
       },
       {
-        "name": "Neha Verma",
+        "name": "TechShreyash",
         "role": "Technical Coordinator",
-        "githubUrl": "https://github.com/neha-verma"
+        "githubUrl": "https://github.com/TechShreyash"
+      },
+      {
+        "name": "Siddharth-0001",
+        "role": "Core Contributor",
+        "githubUrl": "https://github.com/Siddharth-0001"
+      },
+      {
+        "name": "paawan8",
+        "role": "Core Contributor",
+        "githubUrl": "https://github.com/paawan8"
       }
     ],
     "featured": true
   },
   {
-    "id": "class-locator",
-    "slug": "class-locator",
-    "name": "Class Locator",
-    "tagline": "Indoor navigation and class finder for campus buildings",
-    "description": "Class Locator provides map-based guidance to help students find classrooms, labs, and offices with confidence.",
+    "id": "resource-adda",
+    "slug": "resource-adda",
+    "name": "Resource Adda",
+    "tagline": "Academic resource-sharing platform sorted by branch and semester",
+    "description": "A full-stack verified repository helping students discover study materials, contribute notes, and connect with academic communities.",
     "status": "Active",
-    "tags": ["Navigation", "Maps", "Campus"],
-    "stack": ["React", "Node.js", "MongoDB", "Mapbox"],
+    "tags": ["Education", "Academic Resources", "Notes Sharing"],
+    "stack": ["React", "Express", "MongoDB", "Socket.io", "Cloudinary", "Docker"],
     "repositories": [
       {
-        "name": "class-locator-web",
-        "url": "https://github.com/NITRR-Official/class-locator-web",
-        "description": "Web experience for room search and directions.",
-        "role": "frontend"
-      },
-      {
-        "name": "class-locator-api",
-        "url": "https://github.com/NITRR-Official/class-locator-api",
-        "description": "Routing engine and data APIs.",
-        "role": "backend"
-      },
-      {
-        "name": "class-locator-data",
-        "url": "https://github.com/NITRR-Official/class-locator-data",
-        "description": "Campus building metadata and maps.",
-        "role": "data"
+        "name": "Resource-Adda",
+        "url": "https://github.com/NITRR-Official/Resource-Adda",
+        "description": "Full-stack repository containing React frontend and Express backend.",
+        "role": "monorepo"
       }
     ],
     "links": [
       {
-        "label": "Docs",
-        "url": "https://github.com/NITRR-Official/class-locator-web#readme"
+        "label": "Live Demo",
+        "url": "https://resource-adda.onrender.com"
       }
     ],
-    "problemStatement": "First-year students struggle to locate rooms across multiple blocks, leading to lost time and late arrivals.",
+    "problemStatement": "Academic resource discovery is fragmented and unverified. Large file sharing (like textbooks/PDF notes) often fails on standard HTTP routes due to timeouts, and there is no centralized database or department-level moderation workflow.",
     "scope": [
-      "Room and lab discovery",
-      "Turn-by-turn navigation for buildings",
-      "Search by faculty, department, or code"
+      "Hierarchical resource discovery (branch -> semester -> subject -> unit)",
+      "Cross-branch search queries and built-in PDF viewer",
+      "Contributor uploads with admin-gated moderation queue",
+      "Chunked Socket.io file streaming (up to 200MB) directly to Cloudinary",
+      "JWT-secured admin panels and daily request analytics logging"
     ],
     "goals": [
-      "Cut navigation time for new students",
-      "Improve accessibility for visitors",
-      "Provide a shared campus map dataset"
+      "Centralize academic materials into a single verified repository",
+      "Allow student contributions via a robust moderation flow",
+      "Support large note uploads up to 200MB with progress feedback"
     ],
     "impact": [
-      "Lowered confusion during orientation",
-      "Improved class punctuality",
-      "Reusable map data for future projects"
+      "Speeds up study resource discovery for students",
+      "Verifies note quality to block spam and irrelevant materials",
+      "Secures admin endpoints and simplifies deployment using Docker Compose"
     ],
     "roadmap": [
-      "Add offline map support",
-      "Introduce accessibility routes",
-      "Integrate campus shuttle locations"
+      "Implement automated unit and integration testing suite",
+      "Add rate limiting and input sanitization hardening",
+      "Integrate email notifications on contribution status changes"
     ],
     "contributors": [
       {
-        "name": "Riya Sharma",
-        "role": "Project Liaison",
-        "githubUrl": "https://github.com/riya-sharma"
+        "name": "Devesh Agarwal",
+        "role": "Lead Coordinator",
+        "githubUrl": "https://github.com/CodeWithDevesh"
       },
       {
-        "name": "Kabir Patel",
-        "role": "Documentation Lead",
-        "githubUrl": "https://github.com/kabir-patel"
+        "name": "Divyansh Sharma",
+        "role": "Core Contributor",
+        "githubUrl": "https://github.com/divyansh884"
+      },
+      {
+        "name": "Akshata Bakre",
+        "role": "Core Contributor",
+        "githubUrl": "https://github.com/akshatabakre"
+      },
+      {
+        "name": "CoderAkshat404",
+        "role": "Core Contributor",
+        "githubUrl": "https://github.com/CoderAkshat404"
       }
     ],
     "featured": true
   },
   {
-    "id": "hostelhub",
-    "slug": "hostelhub",
-    "name": "HostelHub",
-    "tagline": "Maintenance, inventory, and mess workflows for hostels",
-    "description": "HostelHub centralizes maintenance requests, inventory tracking, and mess planning for hostel administrators.",
-    "status": "Dormant",
-    "tags": ["Operations", "Facilities", "Campus"],
-    "stack": ["Next.js", "Node.js", "PostgreSQL"],
+    "id": "archhira",
+    "slug": "archhira",
+    "name": "ArchHira",
+    "tagline": "Venue booking and approval platform for the Architecture Department",
+    "description": "A specialized operations and booking engine designed to manage authentication, booking calendars, conflict checks, and admin approvals for Architecture Department venues.",
+    "status": "Active",
+    "tags": ["Operations", "Venue Booking", "Campus Planning"],
+    "stack": ["Next.js", "TypeScript", "MongoDB", "Nodemailer", "Tailwind CSS"],
     "repositories": [
       {
-        "name": "hostelhub-frontend",
-        "url": "https://github.com/NITRR-Official/hostelhub-frontend",
-        "description": "Staff dashboard and student request portal.",
-        "role": "frontend"
-      },
-      {
-        "name": "hostelhub-backend",
-        "url": "https://github.com/NITRR-Official/hostelhub-backend",
-        "description": "Workflow automation and reporting APIs.",
-        "role": "backend"
-      },
-      {
-        "name": "hostelhub-ops",
-        "url": "https://github.com/NITRR-Official/hostelhub-ops",
-        "description": "Infrastructure templates and deployment scripts.",
-        "role": "infrastructure"
+        "name": "ArchHira",
+        "url": "https://github.com/NITRR-Official/ArchHira",
+        "description": "Next.js App Router repository for venue bookings.",
+        "role": "monorepo"
       }
     ],
     "links": [
       {
-        "label": "Project Brief",
-        "url": "https://github.com/NITRR-Official/hostelhub-frontend#readme"
+        "label": "GitHub Repository",
+        "url": "https://github.com/NITRR-Official/ArchHira"
       }
     ],
-    "problemStatement": "Hostel operations rely on manual tracking for maintenance and mess planning, leading to delayed resolutions.",
+    "problemStatement": "Venue booking in the Architecture department is a manual, paper-based, or fragmented process. This results in scheduling conflicts (double-bookings), lack of real-time availability visibility, tedious verification steps, and high administrative load for approvals.",
     "scope": [
-      "Maintenance ticket intake and tracking",
-      "Inventory stock visibility",
-      "Mess menu planning and feedback"
+      "OTP-based authentication for registration, login, and resets",
+      "Multi-venue booking calendars (Hira Hall, Arch Hall, Guest House)",
+      "Conflict-aware slot validations (First Half, Second Half, Full Day, Room Capacity)",
+      "7-day booking lead-time verification rule",
+      "Admin status lifecycle changes with automatic Nodemailer email confirmation alerts"
     ],
     "goals": [
-      "Reduce turnaround time for repairs",
-      "Give students transparent ticket updates",
-      "Standardize operational reporting"
+      "Automate double-booking and availability conflict checks",
+      "Provide a visual calendar dashboard showing real-time venue availability",
+      "Lower administrative overhead for Department approval workflows"
     ],
     "impact": [
-      "Improved maintenance accountability",
-      "Better resource planning",
-      "Higher student satisfaction"
+      "Eliminates double-booking errors entirely",
+      "Increases transparency of slot and room availability",
+      "Speeds up the booking approval cycle for students and faculty"
     ],
     "roadmap": [
-      "Bring mess feedback to mobile",
-      "Integrate vendor management",
-      "Add monthly analytics exports"
+      "Implement CI testing, component testing, and session security hardening",
+      "Add rate limiting for OTP paths and an admin action audit trail",
+      "Improve operational observability with structured logging"
     ],
     "contributors": [
       {
-        "name": "Ananya Rao",
-        "role": "Community Manager",
-        "githubUrl": "https://github.com/ananya-rao"
+        "name": "Divyansh Sharma",
+        "role": "Lead Coordinator",
+        "githubUrl": "https://github.com/divyansh884"
+      },
+      {
+        "name": "Codec-V",
+        "role": "Technical Coordinator",
+        "githubUrl": "https://github.com/Codec-V"
       }
     ],
-    "featured": false
+    "featured": true
   }
 ]
