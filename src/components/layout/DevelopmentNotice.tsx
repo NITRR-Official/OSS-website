@@ -24,7 +24,7 @@ export function DevelopmentNotice() {
   return (
     <div className="fixed top-20 left-0 right-0 z-50 px-4 py-4">
       <div className="max-w-4xl mx-auto">
-        <div className="relative border border-amber-500 bg-amber-50 dark:bg-amber-950/30 dark:border-amber-700 rounded-lg p-4 shadow-sm">
+        <div className="relative border border-amber-500 bg-amber-50 dark:bg-amber-950 dark:border-amber-700 rounded-lg p-4 shadow-lg">
           <div className="flex items-start gap-3">
             <AlertTriangle className="h-5 w-5 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
             <div className="flex-1">
