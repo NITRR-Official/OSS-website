@@ -4,6 +4,7 @@ import Contributor from "@/lib/db/models/Contributor";
 import OrgStats from "@/lib/db/models/Stats";
 import { fetchAllContributors } from "@/lib/github/contributors";
 import { calculateOrgStats } from "@/lib/github/stats";
+import { syncLeaderboard } from "@/lib/leaderboard/sync";
 
 export const dynamic = "force-dynamic";
 
@@ -32,9 +33,10 @@ export async function POST(request: NextRequest) {
 
     // Update all caches in parallel
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [contributors, stats] = await Promise.all([
+    const [contributors, stats, leaderboard] = await Promise.all([
       updateContributorsCache(),
       updateStatsCache(),
+      updateLeaderboardCache(),
     ]);
 
     return NextResponse.json({
@@ -43,6 +45,7 @@ export async function POST(request: NextRequest) {
       updated: {
         contributors: contributors.count,
         stats: true,
+        leaderboard: leaderboard.processed,
       },
       timestamp: new Date().toISOString(),
     });
@@ -70,4 +73,9 @@ async function updateStatsCache() {
   await OrgStats.deleteMany({});
   await OrgStats.create(freshStats);
   return { success: true };
+}
+
+async function updateLeaderboardCache() {
+  console.log("Syncing leaderboard...");
+  return syncLeaderboard();
 }

@@ -74,6 +74,73 @@ export interface Contribution {
   mergedAt: Date;
 }
 
+export type ContributionType =
+  | "pr_merged"
+  | "review_contribution"
+  | "documentation"
+  | "design_contribution";
+
+export type DifficultyLabel = "easy" | "medium" | "hard" | "critical";
+export type ImpactLabel = "docs" | "feature" | "infra" | "security";
+export type ContributionCategory =
+  | "frontend"
+  | "backend"
+  | "infra"
+  | "docs"
+  | "reviews"
+  | "design"
+  | "other";
+
+export interface ContributionBreakdown {
+  frontend: number;
+  backend: number;
+  infra: number;
+  docs: number;
+  reviews: number;
+  design: number;
+  other: number;
+}
+
+export interface ReputationUser {
+  id: string;
+  githubId: number;
+  username: string;
+  displayName?: string;
+  avatarUrl: string;
+  totalReputation: number;
+  monthlyReputation: number;
+  monthlyReputationMonth: string;
+  currentStreak: number;
+  lastContributionWeekStart?: Date;
+  isMaintainer: boolean;
+  contributionBreakdown: ContributionBreakdown;
+  updatedAt: Date;
+}
+
+export interface ReputationContribution {
+  id: string;
+  githubContributionId: string;
+  githubPrId: number;
+  githubReviewId?: number;
+  githubRepo: string;
+  userId: string;
+  contributionType: ContributionType;
+  difficulty: DifficultyLabel;
+  impact: ImpactLabel;
+  exceptional: boolean;
+  finalScore: number;
+  mergedAt: Date;
+  metadata: Record<string, unknown>;
+}
+
+export interface SyncState {
+  id: string;
+  key: string;
+  lastSyncedAt?: Date;
+  lastProcessedEventId?: number;
+  updatedAt: Date;
+}
+
 export interface OrgStats {
   totalProjects: number;
   totalContributors: number;

@@ -11,17 +11,19 @@ import {
 } from "@/components/ui/table";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { Contributor } from "@/types";
+import { ReputationUser } from "@/types";
 import { Trophy, Medal, Award, ExternalLink } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 
 interface LeaderboardTableProps {
-  contributors: Contributor[];
+  allTime: ReputationUser[];
+  monthly: ReputationUser[];
 }
 
-export function LeaderboardTable({ contributors }: LeaderboardTableProps) {
+export function LeaderboardTable({ allTime, monthly }: LeaderboardTableProps) {
   const [period, setPeriod] = useState<"all-time" | "monthly">("all-time");
+  const activeData = period === "monthly" ? monthly : allTime;
 
   return (
     <div className="space-y-6">
@@ -32,18 +34,24 @@ export function LeaderboardTable({ contributors }: LeaderboardTableProps) {
         </TabsList>
 
         <TabsContent value="all-time" className="mt-6">
-          <LeaderboardContent contributors={contributors} />
+          <LeaderboardContent contributors={activeData} />
         </TabsContent>
 
         <TabsContent value="monthly" className="mt-6">
-          <LeaderboardContent contributors={contributors} period="monthly" />
+          <LeaderboardContent contributors={activeData} period="monthly" />
         </TabsContent>
       </Tabs>
     </div>
   );
 }
 
-function LeaderboardContent({ contributors }: { contributors: Contributor[]; period?: string }) {
+function LeaderboardContent({
+  contributors,
+  period,
+}: {
+  contributors: ReputationUser[];
+  period?: string;
+}) {
   const getRankIcon = (rank: number) => {
     switch (rank) {
       case 1:
@@ -64,9 +72,9 @@ function LeaderboardContent({ contributors }: { contributors: Contributor[]; per
           <TableRow>
             <TableHead className="w-16">Rank</TableHead>
             <TableHead>Contributor</TableHead>
-            <TableHead className="text-right">Points</TableHead>
-            <TableHead className="text-right">PRs</TableHead>
-            <TableHead className="text-right hidden md:table-cell">Projects</TableHead>
+            <TableHead className="text-right">Reputation</TableHead>
+            <TableHead className="text-right hidden md:table-cell">Streak</TableHead>
+            <TableHead className="text-right hidden md:table-cell">Monthly</TableHead>
             <TableHead className="w-12"></TableHead>
           </TableRow>
         </TableHeader>
@@ -88,25 +96,33 @@ function LeaderboardContent({ contributors }: { contributors: Contributor[]; per
                       />
                     )}
                     <div>
-                      <div className="font-medium">{contributor.username}</div>
-                      {contributor.name && (
-                        <div className="text-sm text-muted-foreground">{contributor.name}</div>
+                      <Link href={`/leaderboard/${contributor.username}`} className="font-medium">
+                        {contributor.username}
+                      </Link>
+                      {contributor.displayName && (
+                        <div className="text-sm text-muted-foreground">
+                          {contributor.displayName}
+                        </div>
                       )}
                     </div>
                   </div>
                 </TableCell>
                 <TableCell className="text-right">
                   <Badge variant="secondary" className="font-mono">
-                    {contributor.totalPoints}
+                    {period === "monthly"
+                      ? contributor.monthlyReputation
+                      : contributor.totalReputation}
                   </Badge>
                 </TableCell>
-                <TableCell className="text-right">{contributor.totalPRs}</TableCell>
                 <TableCell className="text-right hidden md:table-cell">
-                  {contributor.projectsContributedTo.length}
+                  {contributor.currentStreak}w
+                </TableCell>
+                <TableCell className="text-right hidden md:table-cell">
+                  {contributor.monthlyReputation}
                 </TableCell>
                 <TableCell>
                   <Link
-                    href={contributor.githubUrl}
+                    href={`https://github.com/${contributor.username}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center text-muted-foreground hover:text-primary transition-colors"

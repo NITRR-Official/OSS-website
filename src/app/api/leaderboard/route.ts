@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import dbConnect from "@/lib/db/mongodb";
-import Contributor from "@/lib/db/models/Contributor";
+import User from "@/lib/db/models/User";
+import { formatMonthKey } from "@/lib/leaderboard/streaks";
 
 export const dynamic = "force-dynamic";
 
@@ -19,50 +20,28 @@ export async function GET(request: NextRequest) {
     const period = searchParams.get("period") || "all";
     const limit = parseInt(searchParams.get("limit") || "100");
 
-    let query = {};
+    const baseQuery = { isMaintainer: false };
+    const currentMonthKey = formatMonthKey(new Date());
 
-    // Filter by time period
-    if (period === "month") {
-      const oneMonthAgo = new Date();
-      oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
+    const query =
+      period === "month" ? { ...baseQuery, monthlyReputationMonth: currentMonthKey } : baseQuery;
 
-      // Filter contributors with contributions in the last month
-      query = {
-        "contributions.mergedAt": { $gte: oneMonthAgo },
-      };
-    }
+    const sort =
+      period === "month"
+        ? ({ monthlyReputation: -1 } as Record<string, 1 | -1>)
+        : ({ totalReputation: -1 } as Record<string, 1 | -1>);
 
-    // Fetch contributors
-    let contributors = await Contributor.find(query).sort({ points: -1 }).limit(limit).lean();
-
-    // If filtering by month, recalculate points for that period
-    if (period === "month") {
-      const oneMonthAgo = new Date();
-      oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
-
-      contributors = contributors.map((contributor) => {
-        const recentContributions = contributor.contributions.filter(
-          (c) => new Date(c.mergedAt) >= oneMonthAgo
-        );
-
-        const monthlyPoints = recentContributions.reduce((sum, c) => sum + c.points, 0);
-        const monthlyPRs = recentContributions.length;
-
-        return {
-          ...contributor,
-          points: monthlyPoints,
-          prsMerged: monthlyPRs,
-        };
-      });
-
-      // Re-sort by monthly points
-      contributors.sort((a, b) => b.points - a.points);
-    }
+    const users = await User.find(query).sort(sort).limit(limit).lean();
+    const data = users.map((user) => ({
+      ...user,
+      id: user._id?.toString?.() || user._id,
+    }));
 
     return NextResponse.json({
-      leaderboard: contributors,
+      data,
       period,
-      count: contributors.length,
+      count: users.length,
+      month: currentMonthKey,
     });
   } catch (error) {
     console.error("Error in /api/leaderboard:", error);

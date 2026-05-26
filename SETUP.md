@@ -64,6 +64,9 @@ NEXT_PUBLIC_BASE_URL=http://localhost:3000
 
 # Cache Update Secret (generate with: openssl rand -base64 32)
 CACHE_UPDATE_SECRET=your_random_secret_here
+
+# Optional: exclude maintainers from leaderboard (comma-separated GitHub usernames)
+MAINTAINER_USERNAMES=maintainer1,maintainer2
 ```
 
 **Replace:**
@@ -94,6 +97,27 @@ pnpm dev
    - Stats dashboard with real numbers
    - Featured projects from your GitHub org
    - Activity chart with data
+
+---
+
+## Step 6: Enable Scheduled Leaderboard Sync (Optional)
+
+You can run the sync hourly using either GitHub Actions or Vercel Cron.
+
+### Option A: GitHub Actions
+
+Add these repository secrets:
+
+- `CACHE_UPDATE_SECRET` (same value as `.env.local`)
+- `LEADERBOARD_SYNC_URL` (e.g., `https://your-domain.com/api/leaderboard/sync`)
+
+The workflow at `.github/workflows/leaderboard-sync.yml` runs hourly.
+
+### Option B: Vercel Cron
+
+If you deploy on Vercel, `vercel.json` already schedules an hourly GET to
+`/api/leaderboard/sync`. No extra setup is required beyond your standard
+environment variables.
 
 ---
 

@@ -2,7 +2,6 @@
 
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useEffect, useState } from "react";
 import {
   LineChart,
   Line,
@@ -22,30 +21,11 @@ interface ActivityChartProps {
 }
 
 export function ActivityChart({ data }: ActivityChartProps) {
-  const [isDark, setIsDark] = useState(
-    typeof document !== "undefined" && document.documentElement.classList.contains("dark")
-  );
-
-  useEffect(() => {
-    // Listen for theme changes
-    const observer = new MutationObserver(() => {
-      const dark = document.documentElement.classList.contains("dark");
-      setIsDark(dark);
-    });
-
-    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
-
-    return () => observer.disconnect();
-  }, []);
-
   const chartColors = {
     commits: "#8b5cf6",
     prs: "#10b981",
     issues: "#f59e0b",
   };
-
-  const tickColor = isDark ? "#ffffff" : "#000000";
-  const gridStroke = isDark ? "rgba(148, 163, 184, 0.25)" : "rgba(100, 116, 139, 0.15)";
 
   return (
     <Card className="p-6">
@@ -58,29 +38,32 @@ export function ActivityChart({ data }: ActivityChartProps) {
         <TabsContent value="line">
           <ResponsiveContainer width="100%" height={300}>
             <LineChart data={data}>
-              <CartesianGrid strokeDasharray="3 3" stroke={gridStroke} strokeOpacity={1} />
+              <CartesianGrid
+                strokeDasharray="3 3"
+                stroke="oklch(var(--muted-foreground))"
+                strokeOpacity={0.25}
+              />
               <XAxis
                 dataKey="month"
                 className="text-xs"
-                tick={{ fill: tickColor }}
-                axisLine={{ stroke: gridStroke }}
-                tickLine={{ stroke: gridStroke }}
+                tick={{ fill: "#ffffff" }}
+                axisLine={{ stroke: "oklch(var(--muted-foreground))" }}
+                tickLine={{ stroke: "oklch(var(--muted-foreground))" }}
               />
               <YAxis
                 className="text-xs"
-                tick={{ fill: tickColor }}
-                axisLine={{ stroke: gridStroke }}
-                tickLine={{ stroke: gridStroke }}
+                tick={{ fill: "#ffffff" }}
+                axisLine={{ stroke: "oklch(var(--muted-foreground))" }}
+                tickLine={{ stroke: "oklch(var(--muted-foreground))" }}
               />
               <Tooltip
                 contentStyle={{
-                  backgroundColor: isDark ? "#1e293b" : "#f1f5f9",
-                  border: isDark ? "1px solid #475569" : "1px solid #e2e8f0",
+                  backgroundColor: "oklch(var(--background))",
+                  border: "1px solid oklch(var(--border))",
                   borderRadius: "6px",
-                  color: isDark ? "#ffffff" : "#000000",
                 }}
               />
-              <Legend wrapperStyle={{ color: tickColor }} />
+              <Legend wrapperStyle={{ color: "oklch(var(--muted-foreground))" }} />
               <Line
                 type="monotone"
                 dataKey="commits"
@@ -117,29 +100,32 @@ export function ActivityChart({ data }: ActivityChartProps) {
         <TabsContent value="bar">
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={data}>
-              <CartesianGrid strokeDasharray="3 3" stroke={gridStroke} strokeOpacity={1} />
+              <CartesianGrid
+                strokeDasharray="3 3"
+                stroke="oklch(var(--muted-foreground))"
+                strokeOpacity={0.25}
+              />
               <XAxis
                 dataKey="month"
                 className="text-xs"
-                tick={{ fill: tickColor }}
-                axisLine={{ stroke: gridStroke }}
-                tickLine={{ stroke: gridStroke }}
+                tick={{ fill: "#ffffff" }}
+                axisLine={{ stroke: "oklch(var(--muted-foreground))" }}
+                tickLine={{ stroke: "oklch(var(--muted-foreground))" }}
               />
               <YAxis
                 className="text-xs"
-                tick={{ fill: tickColor }}
-                axisLine={{ stroke: gridStroke }}
-                tickLine={{ stroke: gridStroke }}
+                tick={{ fill: "#ffffff" }}
+                axisLine={{ stroke: "oklch(var(--muted-foreground))" }}
+                tickLine={{ stroke: "oklch(var(--muted-foreground))" }}
               />
               <Tooltip
                 contentStyle={{
-                  backgroundColor: isDark ? "#1e293b" : "#f1f5f9",
-                  border: isDark ? "1px solid #475569" : "1px solid #e2e8f0",
+                  backgroundColor: "oklch(var(--background))",
+                  border: "1px solid oklch(var(--border))",
                   borderRadius: "6px",
-                  color: isDark ? "#ffffff" : "#000000",
                 }}
               />
-              <Legend wrapperStyle={{ color: tickColor }} />
+              <Legend wrapperStyle={{ color: "oklch(var(--muted-foreground))" }} />
               <Bar
                 dataKey="commits"
                 fill={chartColors.commits}

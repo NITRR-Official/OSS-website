@@ -239,18 +239,21 @@ export default function ContributePage() {
               <GitPullRequest className="h-12 w-12 text-primary mx-auto mb-4" />
               <h2 className="text-2xl font-bold mb-4">Earn Points & Climb the Leaderboard</h2>
               <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
-                Every merged pull request for an org reconized issue earns you points based on
-                difficulty:
+                Reputation is based on meaningful contributions. Base scores are weighted by
+                difficulty, impact, and exceptional labels.
               </p>
               <div className="flex flex-wrap justify-center gap-4 mb-6">
                 <Badge variant="outline" className="text-base py-2 px-4">
-                  Easy: 10 points
+                  PR Merged: 20
                 </Badge>
                 <Badge variant="outline" className="text-base py-2 px-4">
-                  Medium: 25 points
+                  Review: 10
                 </Badge>
                 <Badge variant="outline" className="text-base py-2 px-4">
-                  Hard: 50 points
+                  Docs: 12
+                </Badge>
+                <Badge variant="outline" className="text-base py-2 px-4">
+                  Design: 15
                 </Badge>
               </div>
               <Button asChild>

@@ -1,15 +1,14 @@
 import { Suspense } from "react";
 import { Container } from "@/components/layout/Container";
 import { LeaderboardTable } from "@/components/leaderboard/LeaderboardTable";
-import { Contributor } from "@/types";
+import { ReputationUser } from "@/types";
 import { Skeleton } from "@/components/ui/skeleton";
 
-async function getLeaderboard(): Promise<Contributor[]> {
+async function getLeaderboard(period: "all" | "month"): Promise<ReputationUser[]> {
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"}/api/leaderboard`,
+      `${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"}/api/leaderboard?period=${period}`,
       {
-        next: { revalidate: 0 }, // Always fetch fresh in dev
         cache: "no-store",
       }
     );
@@ -51,7 +50,7 @@ function LeaderboardLoading() {
 }
 
 export default async function LeaderboardPage() {
-  const contributors = await getLeaderboard();
+  const [allTime, monthly] = await Promise.all([getLeaderboard("all"), getLeaderboard("month")]);
 
   return (
     <Suspense fallback={<LeaderboardLoading />}>
@@ -60,27 +59,27 @@ export default async function LeaderboardPage() {
           <div className="mb-8">
             <h1 className="text-3xl md:text-4xl font-bold mb-4">Leaderboard</h1>
             <p className="text-lg text-muted-foreground">
-              Top contributors ranked by points earned from merged pull requests
+              Meaningful contributions ranked by reputation and sustained impact
             </p>
           </div>
 
-          {contributors.length === 0 ? (
+          {allTime.length === 0 ? (
             <div className="text-center py-12">
               <p className="text-lg text-muted-foreground">
                 No contributors found. Start contributing to see your name here!
               </p>
             </div>
           ) : (
-            <LeaderboardTable contributors={contributors} />
+            <LeaderboardTable allTime={allTime} monthly={monthly} />
           )}
 
           <div className="mt-8 p-6 rounded-lg bg-muted/50">
             <h3 className="font-semibold mb-2">How Points Work</h3>
             <ul className="space-y-2 text-sm text-muted-foreground">
-              <li>• Easy PRs: 10 points</li>
-              <li>• Medium PRs: 25 points</li>
-              <li>• Hard PRs: 50 points</li>
-              <li>• PRs without difficulty labels: 10 points (default)</li>
+              <li>• Base scores are weighted by difficulty, impact, and exceptional labels.</li>
+              <li>• Reviews, docs, and design contributions have their own base values.</li>
+              <li>• Weekly streaks add bonus reputation for consistent, meaningful work.</li>
+              <li>• Maintainers are excluded from leaderboard rankings.</li>
             </ul>
           </div>
         </Container>

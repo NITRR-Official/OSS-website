@@ -1,0 +1,22 @@
+name: Leaderboard Sync
+
+on:
+  schedule:
+    - cron: "0 * * * *"
+  workflow_dispatch:
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger leaderboard sync
+        env:
+          SYNC_URL: ${{ secrets.LEADERBOARD_SYNC_URL }}
+          SYNC_SECRET: ${{ secrets.CACHE_UPDATE_SECRET }}
+        run: |
+          if [ -z "$SYNC_URL" ]; then echo "Missing LEADERBOARD_SYNC_URL"; exit 1; fi
+          if [ -z "$SYNC_SECRET" ]; then echo "Missing CACHE_UPDATE_SECRET"; exit 1; fi
+          curl --fail --show-error --silent \
+            -X POST \
+            -H "Authorization: Bearer $SYNC_SECRET" \
+            "$SYNC_URL"

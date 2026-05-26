@@ -13,7 +13,7 @@
 ## 🌟 Features
 
 - **📊 Analytics Dashboard**: Real-time stats on projects, contributors, and PRs
-- **🏆 Leaderboard**: Track top contributors with point-based system
+- **🏆 Leaderboard**: Reputation-based rankings for meaningful contributions
 - **📅 Events**: Showcase upcoming contribution drives and past events
 - **🚀 Projects**: Browse all organization projects with filters and search
 - **📚 Research**: Display research papers and documentation
@@ -128,19 +128,35 @@ pnpm type-check   # Check TypeScript types
 ## 🔄 Data Flow
 
 ```
-GitHub API → API Routes → MongoDB Cache → Frontend
-     ↓            ↓              ↓            ↓
-  (Source)   (Fetcher)      (Storage)   (Consumer)
+GitHub API → Sync Service → MongoDB → Frontend
+    ↓            ↓             ↓          ↓
+  (Source)   (Processor)   (Storage)  (Consumer)
 ```
 
 ### Caching Strategy
 
 - **Projects**: Update every 12 hours
-- **Contributors**: Update every 24 hours
-- **Stats**: Update every 6 hours
-- **Leaderboard**: Update every 1 hour
+- **Stats**: Update every 12 hours
+- **Leaderboard**: Sync hourly (incremental)
 
-Automated updates via GitHub Actions (3x daily).
+### Scheduled Leaderboard Sync (GitHub Actions)
+
+The repo includes an hourly GitHub Actions workflow that triggers the leaderboard sync endpoint.
+Configure these repository secrets:
+
+- `CACHE_UPDATE_SECRET` (same as your API secret)
+- `LEADERBOARD_SYNC_URL` (e.g., `https://your-domain.com/api/leaderboard/sync`)
+
+Automated updates via GitHub Actions (hourly).
+
+### Scheduled Leaderboard Sync (Vercel Cron)
+
+If you deploy on Vercel, the repo includes a `vercel.json` cron that calls
+`/api/leaderboard/sync` hourly via GET. The sync route accepts Vercel Cron
+requests based on the `vercel-cron/1.0` user agent.
+
+For manual or external triggers, keep using the POST endpoint with
+`Authorization: Bearer $CACHE_UPDATE_SECRET`.
 
 ## 🎨 Customization
 
@@ -172,21 +188,23 @@ Edit `src/lib/constants.ts` for site-wide settings:
 
 ## 📊 MongoDB Collections
 
-The app uses three main collections:
+The app uses these main collections:
 
-1. **projects**: Cached GitHub repository data
-2. **contributors**: Aggregated contributor stats and points
-3. **orgStats**: Organization-wide statistics
+1. **users**: Reputation profiles for contributors
+2. **reputationcontributions**: Scored contribution history
+3. **syncstates**: Incremental sync checkpoints
+4. **orgStats**: Organization-wide statistics
 
 ## 🔐 Environment Variables
 
-| Variable               | Description                  | Required |
-| ---------------------- | ---------------------------- | -------- |
-| `GITHUB_TOKEN`         | GitHub Personal Access Token | Yes      |
-| `GITHUB_ORG_NAME`      | GitHub organization name     | Yes      |
-| `MONGODB_URI`          | MongoDB connection string    | Yes      |
-| `NEXT_PUBLIC_SITE_URL` | Public site URL              | Yes      |
-| `CACHE_UPDATE_SECRET`  | Secret for cache update API  | Yes      |
+| Variable               | Description                                                  | Required |
+| ---------------------- | ------------------------------------------------------------ | -------- |
+| `GITHUB_TOKEN`         | GitHub Personal Access Token                                 | Yes      |
+| `GITHUB_ORG_NAME`      | GitHub organization name                                     | Yes      |
+| `MONGODB_URI`          | MongoDB connection string                                    | Yes      |
+| `NEXT_PUBLIC_SITE_URL` | Public site URL                                              | Yes      |
+| `CACHE_UPDATE_SECRET`  | Secret for cache update API                                  | Yes      |
+| `MAINTAINER_USERNAMES` | Comma-separated GitHub usernames to exclude from leaderboard | No       |
 
 ## 🚢 Deployment
 
