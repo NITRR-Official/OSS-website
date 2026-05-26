@@ -73,14 +73,23 @@ export default async function LeaderboardPage() {
             <LeaderboardTable allTime={allTime} monthly={monthly} />
           )}
 
-          <div className="mt-8 p-6 rounded-lg bg-muted/50">
-            <h3 className="font-semibold mb-2">How Points Work</h3>
-            <ul className="space-y-2 text-sm text-muted-foreground">
-              <li>• Base scores are weighted by difficulty, impact, and exceptional labels.</li>
-              <li>• Reviews, docs, and design contributions have their own base values.</li>
-              <li>• Weekly streaks add bonus reputation for consistent, meaningful work.</li>
-              <li>• Maintainers are excluded from leaderboard rankings.</li>
-            </ul>
+          <div className="mt-8 space-y-4">
+            <div className="p-6 rounded-lg bg-muted/50">
+              <h3 className="font-semibold mb-2">How Points Work</h3>
+              <ul className="space-y-2 text-sm text-muted-foreground">
+                <li>• Base scores are weighted by difficulty, impact, and exceptional labels.</li>
+                <li>• Reviews, docs, and design contributions have their own base values.</li>
+                <li>• Weekly streaks add bonus reputation for consistent, meaningful work.</li>
+                <li>• Maintainers are excluded from leaderboard rankings.</li>
+              </ul>
+            </div>
+
+            <div className="p-6 rounded-lg bg-blue-500/10 border border-blue-500/20">
+              <p className="text-sm text-blue-700 dark:text-blue-300">
+                <span className="font-semibold">Updated hourly</span> — The leaderboard syncs every
+                hour with the latest contributions from GitHub.
+              </p>
+            </div>
           </div>
         </Container>
       </div>
