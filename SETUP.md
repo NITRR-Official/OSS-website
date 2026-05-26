@@ -100,24 +100,18 @@ pnpm dev
 
 ---
 
-## Step 6: Enable Scheduled Leaderboard Sync (Optional)
+## Step 6: Enable Scheduled Leaderboard Sync (Recommended)
 
-You can run the sync hourly using either GitHub Actions or Vercel Cron.
+To keep the leaderboard updated hourly, set up GitHub Actions:
 
-### Option A: GitHub Actions
+1. Add these repository secrets:
+   - `CACHE_UPDATE_SECRET` - Copy the value from your `.env.local`
+   - `LEADERBOARD_SYNC_URL` - Your deployed site URL + `/api/leaderboard/sync`
+     (e.g., `https://your-domain.com/api/leaderboard/sync`)
 
-Add these repository secrets:
+2. The workflow at `.github/workflows/leaderboard-sync.yml` will run hourly and automatically sync the leaderboard.
 
-- `CACHE_UPDATE_SECRET` (same value as `.env.local`)
-- `LEADERBOARD_SYNC_URL` (e.g., `https://your-domain.com/api/leaderboard/sync`)
-
-The workflow at `.github/workflows/leaderboard-sync.yml` runs hourly.
-
-### Option B: Vercel Cron
-
-If you deploy on Vercel, `vercel.json` already schedules an hourly GET to
-`/api/leaderboard/sync`. No extra setup is required beyond your standard
-environment variables.
+That's it! The sync will run automatically on schedule.
 
 ---
 

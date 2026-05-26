@@ -144,19 +144,10 @@ GitHub API → Sync Service → MongoDB → Frontend
 The repo includes an hourly GitHub Actions workflow that triggers the leaderboard sync endpoint.
 Configure these repository secrets:
 
-- `CACHE_UPDATE_SECRET` (same as your API secret)
+- `CACHE_UPDATE_SECRET` (same as your `.env.local` value)
 - `LEADERBOARD_SYNC_URL` (e.g., `https://your-domain.com/api/leaderboard/sync`)
 
-Automated updates via GitHub Actions (hourly).
-
-### Scheduled Leaderboard Sync (Vercel Cron)
-
-If you deploy on Vercel, the repo includes a `vercel.json` cron that calls
-`/api/leaderboard/sync` hourly via GET. The sync route accepts Vercel Cron
-requests based on the `vercel-cron/1.0` user agent.
-
-For manual or external triggers, keep using the POST endpoint with
-`Authorization: Bearer $CACHE_UPDATE_SECRET`.
+The workflow runs every hour and calls the `/api/leaderboard/sync` endpoint via POST with the secret.
 
 ## 🎨 Customization
 
