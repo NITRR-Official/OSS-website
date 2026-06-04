@@ -35,7 +35,7 @@ const UserSchema = new Schema<ReputationUser>(
 
 UserSchema.index({ totalReputation: -1 });
 UserSchema.index({ monthlyReputation: -1 });
-UserSchema.index({ username: 1 });
+
 UserSchema.index({ isMaintainer: 1 });
 
 const User: Model<ReputationUser> =

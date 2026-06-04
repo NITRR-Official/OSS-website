@@ -19,8 +19,9 @@ export async function GET(request: NextRequest) {
     const searchParams = request.nextUrl.searchParams;
     const period = searchParams.get("period") || "all";
     const limit = parseInt(searchParams.get("limit") || "100");
+    const role = searchParams.get("role") || "community";
 
-    const baseQuery = { isMaintainer: false };
+    const baseQuery = { isMaintainer: role === "maintainer" };
     const currentMonthKey = formatMonthKey(new Date());
 
     const query =

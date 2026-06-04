@@ -222,7 +222,6 @@ async function processReviewContributions({
 
     const reviewerLogin = review.user.login.toLowerCase();
     if (reviewerLogin === authorLogin.toLowerCase()) continue;
-    if (maintainers.has(reviewerLogin)) continue;
 
     const githubContributionId = `review:${review.id}`;
     const existing = await ReputationContribution.findOne({ githubContributionId });
@@ -275,7 +274,7 @@ async function processReviewContributions({
     const user = await upsertUser({
       githubId: review.user.id,
       username: review.user.login,
-      isMaintainer: false,
+      isMaintainer: maintainers.has(reviewerLogin),
       monthKey: formatMonthKey(mergedAt),
     });
 
@@ -369,16 +368,6 @@ async function processPullRequests({
       const existing = await ReputationContribution.findOne({ githubContributionId });
 
       const authorLogin = pr.user.login.toLowerCase();
-      if (maintainers.has(authorLogin)) {
-        await upsertUser({
-          githubId: pr.user.id,
-          username: pr.user.login,
-          isMaintainer: true,
-          monthKey: formatMonthKey(new Date(pr.merged_at)),
-        });
-        skipped += 1;
-        continue;
-      }
 
       const labels = pr.labels.map((label) =>
         typeof label === "string" ? label : label.name || ""
@@ -472,7 +461,7 @@ async function processPullRequests({
       const user = await upsertUser({
         githubId: pr.user.id,
         username: pr.user.login,
-        isMaintainer: false,
+        isMaintainer: maintainers.has(authorLogin),
         monthKey,
       });
 

@@ -21,7 +21,6 @@ const ReputationContributionSchema = new Schema<ReputationContributionType>(
   }
 );
 
-ReputationContributionSchema.index({ githubContributionId: 1 }, { unique: true });
 ReputationContributionSchema.index({ userId: 1, mergedAt: -1 });
 ReputationContributionSchema.index({ githubRepo: 1 });
 

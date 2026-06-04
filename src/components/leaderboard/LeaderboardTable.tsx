@@ -19,27 +19,52 @@ import Image from "next/image";
 interface LeaderboardTableProps {
   allTime: ReputationUser[];
   monthly: ReputationUser[];
+  maintainersAllTime?: ReputationUser[];
+  maintainersMonthly?: ReputationUser[];
 }
 
-export function LeaderboardTable({ allTime, monthly }: LeaderboardTableProps) {
+export function LeaderboardTable({
+  allTime,
+  monthly,
+  maintainersAllTime = [],
+  maintainersMonthly = [],
+}: LeaderboardTableProps) {
+  const [view, setView] = useState<"community" | "team">("community");
   const [period, setPeriod] = useState<"all-time" | "monthly">("all-time");
-  const activeData = period === "monthly" ? monthly : allTime;
+
+  const activeData =
+    view === "community"
+      ? period === "monthly"
+        ? monthly
+        : allTime
+      : period === "monthly"
+        ? maintainersMonthly
+        : maintainersAllTime;
 
   return (
     <div className="space-y-6">
-      <Tabs value={period} onValueChange={(v) => setPeriod(v as typeof period)}>
-        <TabsList className="grid w-full max-w-md grid-cols-2">
-          <TabsTrigger value="all-time">All Time</TabsTrigger>
-          <TabsTrigger value="monthly">This Month</TabsTrigger>
+      <Tabs value={view} onValueChange={(v) => setView(v as typeof view)}>
+        <TabsList className="grid w-full max-w-md grid-cols-2 mb-6">
+          <TabsTrigger value="community">Community</TabsTrigger>
+          <TabsTrigger value="team">Core Team</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="all-time" className="mt-6">
-          <LeaderboardContent contributors={activeData} />
-        </TabsContent>
+        <Tabs value={period} onValueChange={(v) => setPeriod(v as typeof period)}>
+          <div className="flex items-center justify-between">
+            <TabsList className="grid w-full max-w-[240px] grid-cols-2">
+              <TabsTrigger value="all-time">All Time</TabsTrigger>
+              <TabsTrigger value="monthly">This Month</TabsTrigger>
+            </TabsList>
+          </div>
 
-        <TabsContent value="monthly" className="mt-6">
-          <LeaderboardContent contributors={activeData} period="monthly" />
-        </TabsContent>
+          <TabsContent value="all-time" className="mt-6">
+            <LeaderboardContent contributors={activeData} />
+          </TabsContent>
+
+          <TabsContent value="monthly" className="mt-6">
+            <LeaderboardContent contributors={activeData} period="monthly" />
+          </TabsContent>
+        </Tabs>
       </Tabs>
     </div>
   );

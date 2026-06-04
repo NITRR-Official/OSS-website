@@ -4,10 +4,13 @@ import { LeaderboardTable } from "@/components/leaderboard/LeaderboardTable";
 import { ReputationUser } from "@/types";
 import { Skeleton } from "@/components/ui/skeleton";
 
-async function getLeaderboard(period: "all" | "month"): Promise<ReputationUser[]> {
+async function getLeaderboard(
+  period: "all" | "month",
+  role: "community" | "maintainer" = "community"
+): Promise<ReputationUser[]> {
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"}/api/leaderboard?period=${period}`,
+      `${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"}/api/leaderboard?period=${period}&role=${role}`,
       {
         cache: "no-store",
       }
@@ -50,7 +53,12 @@ function LeaderboardLoading() {
 }
 
 export default async function LeaderboardPage() {
-  const [allTime, monthly] = await Promise.all([getLeaderboard("all"), getLeaderboard("month")]);
+  const [allTime, monthly, maintainersAllTime, maintainersMonthly] = await Promise.all([
+    getLeaderboard("all", "community"),
+    getLeaderboard("month", "community"),
+    getLeaderboard("all", "maintainer"),
+    getLeaderboard("month", "maintainer"),
+  ]);
 
   return (
     <Suspense fallback={<LeaderboardLoading />}>
@@ -63,14 +71,19 @@ export default async function LeaderboardPage() {
             </p>
           </div>
 
-          {allTime.length === 0 ? (
+          {allTime.length === 0 && maintainersAllTime.length === 0 ? (
             <div className="text-center py-12">
               <p className="text-lg text-muted-foreground">
                 No contributors found. Start contributing to see your name here!
               </p>
             </div>
           ) : (
-            <LeaderboardTable allTime={allTime} monthly={monthly} />
+            <LeaderboardTable
+              allTime={allTime}
+              monthly={monthly}
+              maintainersAllTime={maintainersAllTime}
+              maintainersMonthly={maintainersMonthly}
+            />
           )}
 
           <div className="mt-8 space-y-4">
