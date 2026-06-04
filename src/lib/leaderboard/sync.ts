@@ -112,10 +112,6 @@ async function applyContributionToUser({
   if (!user) return null;
 
   const monthKey = formatMonthKey(mergedAt);
-  let monthlyReputation = user.monthlyReputation;
-  if (user.monthlyReputationMonth !== monthKey) {
-    monthlyReputation = 0;
-  }
 
   let currentStreak = user.currentStreak;
   let lastWeekStart = user.lastContributionWeekStart;
@@ -138,8 +134,13 @@ async function applyContributionToUser({
   breakdown[category] = (breakdown[category] || 0) + totalScore;
 
   user.totalReputation += totalScore;
-  user.monthlyReputation = monthlyReputation + totalScore;
-  user.monthlyReputationMonth = monthKey;
+
+  if (!user.monthlyReputationMonth || monthKey > user.monthlyReputationMonth) {
+    user.monthlyReputation = totalScore;
+    user.monthlyReputationMonth = monthKey;
+  } else if (monthKey === user.monthlyReputationMonth) {
+    user.monthlyReputation += totalScore;
+  }
   user.currentStreak = currentStreak;
   user.lastContributionWeekStart = lastWeekStart || user.lastContributionWeekStart;
   user.contributionBreakdown = breakdown;
