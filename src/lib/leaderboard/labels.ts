@@ -10,6 +10,7 @@ const difficultyMap: Record<string, DifficultyLabel> = {
 const impactMap: Record<string, ImpactLabel> = {
   "type:docs": "docs",
   "type:feature": "feature",
+  "type:bug": "bug",
   "type:infra": "infra",
   "type:security": "security",
 };
@@ -33,7 +34,7 @@ export function parseContributionLabels(labels: string[]) {
     ? difficultyMap[difficultyLabel] || "medium"
     : "medium";
 
-  const impact: ImpactLabel = impactLabel ? impactMap[impactLabel] || "docs" : "docs";
+  const impact: ImpactLabel = impactLabel ? impactMap[impactLabel] || "standard" : "standard";
 
   const exceptional = normalized.includes("exceptional");
   const isDocs =

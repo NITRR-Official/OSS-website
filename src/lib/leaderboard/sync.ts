@@ -148,6 +148,41 @@ async function applyContributionToUser({
   return user;
 }
 
+async function updateContributionForUser({
+  userId,
+  mergedAt,
+  oldScore,
+  newScore,
+  oldCategory,
+  newCategory,
+}: {
+  userId: string;
+  mergedAt: Date;
+  oldScore: number;
+  newScore: number;
+  oldCategory: ContributionCategory;
+  newCategory: ContributionCategory;
+}) {
+  const user = await User.findById(userId);
+  if (!user) return null;
+
+  const monthKey = formatMonthKey(mergedAt);
+
+  const breakdown = user.contributionBreakdown || getDefaultBreakdown();
+  breakdown[oldCategory] = Math.max(0, (breakdown[oldCategory] || 0) - oldScore);
+  breakdown[newCategory] = (breakdown[newCategory] || 0) + newScore;
+
+  user.totalReputation = Math.max(0, user.totalReputation - oldScore + newScore);
+
+  if (user.monthlyReputationMonth === monthKey) {
+    user.monthlyReputation = Math.max(0, user.monthlyReputation - oldScore + newScore);
+  }
+
+  user.contributionBreakdown = breakdown;
+  await user.save();
+  return user;
+}
+
 async function processReviewContributions({
   repoOwner,
   repoName,
@@ -190,16 +225,7 @@ async function processReviewContributions({
     if (maintainers.has(reviewerLogin)) continue;
 
     const githubContributionId = `review:${review.id}`;
-
     const existing = await ReputationContribution.findOne({ githubContributionId });
-    if (existing) continue;
-
-    const user = await upsertUser({
-      githubId: review.user.id,
-      username: review.user.login,
-      isMaintainer: false,
-      monthKey: formatMonthKey(mergedAt),
-    });
 
     const parsed = parseContributionLabels(labels);
     const score = calculateContributionScore({
@@ -207,6 +233,50 @@ async function processReviewContributions({
       difficulty: parsed.difficulty,
       impact: parsed.impact,
       exceptional: parsed.exceptional,
+    });
+
+    if (existing) {
+      const streakBonusPercent = (existing.metadata?.streakBonusPercent as number) || 0;
+      const seasonalBonusPercent = (existing.metadata?.seasonalBonusPercent as number) || 0;
+      const bonusScore = Math.round(score.finalScore * (streakBonusPercent + seasonalBonusPercent));
+      const totalScore = score.finalScore + bonusScore;
+
+      if (existing.finalScore !== totalScore) {
+        const oldLabels = (existing.metadata?.labels as string[]) || [];
+        const oldParsed = parseContributionLabels(oldLabels);
+
+        await updateContributionForUser({
+          userId: existing.userId,
+          mergedAt,
+          oldScore: existing.finalScore,
+          newScore: totalScore,
+          oldCategory: resolveCategory("review_contribution", oldParsed.category),
+          newCategory: resolveCategory("review_contribution", parsed.category),
+        });
+
+        existing.difficulty = parsed.difficulty;
+        existing.impact = parsed.impact;
+        existing.exceptional = parsed.exceptional;
+        existing.finalScore = totalScore;
+        existing.metadata = {
+          ...existing.metadata,
+          labels,
+          multipliers: score,
+          bonusScore,
+          streakBonusPercent,
+          seasonalBonusPercent,
+        };
+        await existing.save();
+        reviewsProcessed += 1;
+      }
+      continue;
+    }
+
+    const user = await upsertUser({
+      githubId: review.user.id,
+      username: review.user.login,
+      isMaintainer: false,
+      monthKey: formatMonthKey(mergedAt),
     });
 
     const meaningful = score.finalScore >= LEADERBOARD_CONFIG.MEANINGFUL_SCORE_THRESHOLD;
@@ -234,6 +304,7 @@ async function processReviewContributions({
         streakBonusPercent,
         seasonalBonusPercent,
         reviewState: review.state,
+        labels,
       },
     });
 
@@ -296,10 +367,6 @@ async function processPullRequests({
 
       const githubContributionId = `pr:${pr.id}`;
       const existing = await ReputationContribution.findOne({ githubContributionId });
-      if (existing) {
-        skipped += 1;
-        continue;
-      }
 
       const authorLogin = pr.user.login.toLowerCase();
       if (maintainers.has(authorLogin)) {
@@ -316,6 +383,82 @@ async function processPullRequests({
       const labels = pr.labels.map((label) =>
         typeof label === "string" ? label : label.name || ""
       );
+
+      if (existing) {
+        const oldLabels = (existing.metadata?.labels as string[]) || [];
+        const labelsChanged =
+          labels.length !== oldLabels.length || !labels.every((l) => oldLabels.includes(l));
+
+        if (!labelsChanged) {
+          skipped += 1;
+          continue;
+        }
+
+        const parsed = parseContributionLabels(labels);
+        const score = calculateContributionScore({
+          contributionType: parsed.contributionType,
+          difficulty: parsed.difficulty,
+          impact: parsed.impact,
+          exceptional: parsed.exceptional,
+        });
+
+        const streakBonusPercent = (existing.metadata?.streakBonusPercent as number) || 0;
+        const seasonalBonusPercent = (existing.metadata?.seasonalBonusPercent as number) || 0;
+        const bonusScore = Math.round(
+          score.finalScore * (streakBonusPercent + seasonalBonusPercent)
+        );
+        const totalScore = score.finalScore + bonusScore;
+
+        const mergedAt = new Date(pr.merged_at);
+        const oldParsed = parseContributionLabels(oldLabels);
+        const oldCategory = resolveCategory(oldParsed.contributionType, oldParsed.category);
+        const newCategory = resolveCategory(parsed.contributionType, parsed.category);
+
+        await updateContributionForUser({
+          userId: existing.userId,
+          mergedAt,
+          oldScore: existing.finalScore,
+          newScore: totalScore,
+          oldCategory,
+          newCategory,
+        });
+
+        existing.contributionType = parsed.contributionType;
+        existing.difficulty = parsed.difficulty;
+        existing.impact = parsed.impact;
+        existing.exceptional = parsed.exceptional;
+        existing.finalScore = totalScore;
+        existing.metadata = {
+          ...existing.metadata,
+          labels,
+          baseScore: getBaseScore(parsed.contributionType),
+          multipliers: score,
+          bonusScore,
+          streakBonusPercent,
+          seasonalBonusPercent,
+        };
+        await existing.save();
+
+        usersUpdated += 1;
+        processed += 1;
+
+        try {
+          reviewsProcessed += await processReviewContributions({
+            repoOwner,
+            repoName,
+            prId: pr.id,
+            prNumber: pr.number,
+            mergedAt,
+            labels,
+            authorLogin: pr.user.login,
+            maintainers,
+          });
+        } catch (error) {
+          console.error(`Failed to process reviews for ${repoName}#${pr.number}:`, error);
+        }
+        continue;
+      }
+
       const parsed = parseContributionLabels(labels);
       const score = calculateContributionScore({
         contributionType: parsed.contributionType,

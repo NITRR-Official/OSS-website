@@ -13,6 +13,8 @@ export const LEADERBOARD_CONFIG = {
   },
   IMPACT_MULTIPLIERS: {
     docs: 1.0,
+    standard: 1.0,
+    bug: 1.2,
     feature: 1.2,
     infra: 1.5,
     security: 2.0,

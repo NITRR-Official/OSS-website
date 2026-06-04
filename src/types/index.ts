@@ -81,7 +81,7 @@ export type ContributionType =
   | "design_contribution";
 
 export type DifficultyLabel = "easy" | "medium" | "hard" | "critical";
-export type ImpactLabel = "docs" | "feature" | "infra" | "security";
+export type ImpactLabel = "docs" | "feature" | "infra" | "security" | "bug" | "standard";
 export type ContributionCategory =
   | "frontend"
   | "backend"
