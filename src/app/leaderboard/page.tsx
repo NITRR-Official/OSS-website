@@ -88,12 +88,22 @@ export default async function LeaderboardPage() {
 
           <div className="mt-8 space-y-4">
             <div className="p-6 rounded-lg bg-muted/50">
-              <h3 className="font-semibold mb-2">How Points Work</h3>
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="font-semibold">How Points Work</h3>
+                <a
+                  href="https://github.com/NITRR-Official/Help-and-Resources/blob/main/scoring.md"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm text-blue-500 hover:underline"
+                >
+                  Read full scoring guide →
+                </a>
+              </div>
               <ul className="space-y-2 text-sm text-muted-foreground">
                 <li>• Base scores are weighted by difficulty, impact, and exceptional labels.</li>
                 <li>• Reviews, docs, and design contributions have their own base values.</li>
                 <li>• Weekly streaks add bonus reputation for consistent, meaningful work.</li>
-                <li>• Maintainers are excluded from leaderboard rankings.</li>
+                <li>• Maintainers and Core Team members are tracked on a separate tab.</li>
               </ul>
             </div>
 
