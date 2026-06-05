@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import dbConnect from "@/lib/db/mongodb";
 import User from "@/lib/db/models/User";
 import ReputationContribution from "@/lib/db/models/ReputationContribution";
+import { formatMonthKey } from "@/lib/leaderboard/streaks";
 
 export const dynamic = "force-dynamic";
 
@@ -24,10 +25,15 @@ export async function GET(
       .limit(50)
       .lean();
 
+    const currentMonthKey = formatMonthKey(new Date());
+    const monthlyReputation =
+      user.monthlyReputationMonth === currentMonthKey ? user.monthlyReputation || 0 : 0;
+
     return NextResponse.json({
       user: {
         ...user,
         id: user._id?.toString?.() || user._id,
+        monthlyReputation,
       },
       contributions: contributions.map((contribution) => ({
         ...contribution,

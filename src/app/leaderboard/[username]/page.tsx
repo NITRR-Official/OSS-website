@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import dbConnect from "@/lib/db/mongodb";
 import User from "@/lib/db/models/User";
 import ReputationContribution from "@/lib/db/models/ReputationContribution";
+import { formatMonthKey } from "@/lib/leaderboard/streaks";
 
 export default async function ContributorProfilePage({
   params,
@@ -20,6 +21,10 @@ export default async function ContributorProfilePage({
   if (!user) {
     notFound();
   }
+
+  const currentMonthKey = formatMonthKey(new Date());
+  const monthlyReputation =
+    user.monthlyReputationMonth === currentMonthKey ? user.monthlyReputation || 0 : 0;
 
   const contributions = await ReputationContribution.find({ userId: user._id.toString() })
     .sort({ mergedAt: -1 })
@@ -56,7 +61,7 @@ export default async function ContributorProfilePage({
               {user.displayName && <p className="text-muted-foreground">{user.displayName}</p>}
               <div className="mt-2 flex flex-wrap gap-2">
                 <Badge variant="secondary">Reputation {user.totalReputation}</Badge>
-                <Badge variant="outline">Monthly {user.monthlyReputation}</Badge>
+                <Badge variant="outline">Monthly {monthlyReputation}</Badge>
                 <Badge variant="outline">Streak {user.currentStreak}w</Badge>
               </div>
             </div>
@@ -110,7 +115,7 @@ export default async function ContributorProfilePage({
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-muted-foreground">This month</span>
-                <span className="font-semibold">{user.monthlyReputation}</span>
+                <span className="font-semibold">{monthlyReputation}</span>
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-muted-foreground">Streak</span>

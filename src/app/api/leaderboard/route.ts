@@ -36,6 +36,8 @@ export async function GET(request: NextRequest) {
     const data = users.map((user) => ({
       ...user,
       id: user._id?.toString?.() || user._id,
+      monthlyReputation:
+        user.monthlyReputationMonth === currentMonthKey ? user.monthlyReputation : 0,
     }));
 
     return NextResponse.json({
