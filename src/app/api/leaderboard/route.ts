@@ -37,7 +37,7 @@ export async function GET(request: NextRequest) {
       ...user,
       id: user._id?.toString?.() || user._id,
       monthlyReputation:
-        user.monthlyReputationMonth === currentMonthKey ? user.monthlyReputation : 0,
+        user.monthlyReputationMonth === currentMonthKey ? user.monthlyReputation || 0 : 0,
     }));
 
     return NextResponse.json({
