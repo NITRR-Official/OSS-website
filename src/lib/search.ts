@@ -13,7 +13,15 @@ class PipelineSingleton {
   static async getInstance(progress_callback: any = null) {
     if (this.instance === null) {
       // Dynamically import pipeline to prevent top-level execution during Next.js build
-      const { pipeline } = await import("@xenova/transformers");
+      const { pipeline, env } = await import("@xenova/transformers");
+
+      // Configuration for Vercel Serverless environments
+      env.allowLocalModels = false;
+      env.useBrowserCache = false;
+      // Vercel only allows writing to /tmp
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (env as any).cacheDir = "/tmp/.cache/transformers";
+
       this.instance = pipeline(this.task, this.model, { progress_callback });
     }
     return this.instance;
