@@ -32,6 +32,10 @@ export function InstallPrompt() {
     // eslint-disable-next-line
     setIsIOS(isIosDevice);
 
+    // Check if user previously dismissed the prompt
+    const hasDismissed = localStorage.getItem("pwa_prompt_dismissed") === "true";
+    if (hasDismissed) return;
+
     const handleBeforeInstallPrompt = (e: Event) => {
       e.preventDefault();
       setDeferredPrompt(e as BeforeInstallPromptEvent);
@@ -62,8 +66,18 @@ export function InstallPrompt() {
     }
   };
 
+  const handleDismiss = () => {
+    localStorage.setItem("pwa_prompt_dismissed", "true");
+    setShowPrompt(false);
+  };
+
   return (
-    <Dialog open={showPrompt} onOpenChange={setShowPrompt}>
+    <Dialog
+      open={showPrompt}
+      onOpenChange={(open) => {
+        if (!open) handleDismiss();
+      }}
+    >
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Install NITRR OSS App</DialogTitle>
@@ -73,7 +87,7 @@ export function InstallPrompt() {
           </DialogDescription>
         </DialogHeader>
         <div className="flex justify-end gap-2 mt-4">
-          <Button variant="outline" onClick={() => setShowPrompt(false)}>
+          <Button variant="outline" onClick={handleDismiss}>
             Maybe Later
           </Button>
           {isIOS ? (
