@@ -225,25 +225,19 @@ async function fetchActivityData(
 async function countTotalPRs(
   repos: Array<{ name: string; owner: { login: string } }>
 ): Promise<number> {
-  let totalPRs = 0;
+  try {
+    const { data } = await octokit.search.issuesAndPullRequests({
+      q: `org:${SITE_CONFIG.orgName} is:pr is:merged`,
+      per_page: 1,
+    });
+    return data.total_count;
+  } catch (error) {
+    console.error("Error fetching total PR count via Search API:", error);
 
-  for (const repo of repos) {
-    try {
-      const { data } = await octokit.pulls.list({
-        owner: repo.owner.login,
-        repo: repo.name,
-        state: "closed",
-        per_page: 1,
-      });
-
-      // Get total count from headers
-      totalPRs += data.length;
-    } catch (error) {
-      console.error(`Error fetching PR count for ${repo.name}:`, error);
-    }
+    // Fallback: If search API fails or rate limits, we could do something else,
+    // but returning 0 is safer for now.
+    return 0;
   }
-
-  return totalPRs;
 }
 
 /**
