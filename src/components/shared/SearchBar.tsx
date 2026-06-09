@@ -22,18 +22,30 @@ export function SearchBar({ type }: SearchBarProps) {
   const [isSearching, setIsSearching] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
 
+  const [error, setError] = useState<string | null>(null);
+
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!query.trim()) return;
 
     setIsSearching(true);
     setHasSearched(true);
+    setError(null);
     try {
       const res = await fetch(`/api/search?q=${encodeURIComponent(query)}&type=${type}`);
       const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || "Failed to search");
+      }
       if (Array.isArray(data)) {
         setResults(data);
+      } else {
+        setResults([]);
       }
+    } catch (err: unknown) {
+      console.error(err);
+      setError((err as Error).message);
+      setResults([]);
     } finally {
       setIsSearching(false);
     }
@@ -58,6 +70,8 @@ export function SearchBar({ type }: SearchBarProps) {
             <div className="p-6 text-center text-muted-foreground animate-pulse">
               Searching the vector database...
             </div>
+          ) : error ? (
+            <div className="p-6 text-center text-destructive">Error: {error}</div>
           ) : results.length > 0 ? (
             <ul className="divide-y">
               {results.map((r, idx) => (
