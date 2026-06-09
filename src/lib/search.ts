@@ -1,4 +1,4 @@
-import { pipeline, PipelineType } from "@xenova/transformers";
+import type { PipelineType } from "@xenova/transformers";
 import dbConnect from "@/lib/db/mongodb";
 import Embedding from "@/lib/db/models/Embedding";
 
@@ -12,6 +12,8 @@ class PipelineSingleton {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   static async getInstance(progress_callback: any = null) {
     if (this.instance === null) {
+      // Dynamically import pipeline to prevent top-level execution during Next.js build
+      const { pipeline } = await import("@xenova/transformers");
       this.instance = pipeline(this.task, this.model, { progress_callback });
     }
     return this.instance;

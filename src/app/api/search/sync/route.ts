@@ -5,6 +5,8 @@ import { generateEmbedding } from "@/lib/search";
 import { getAllPosts } from "@/lib/blog";
 import { fetchResourcesList } from "@/lib/github/resources";
 
+export const dynamic = "force-dynamic";
+
 export async function POST() {
   try {
     await dbConnect();
