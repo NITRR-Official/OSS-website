@@ -49,7 +49,7 @@ export function InstallPrompt() {
 
     // If iOS and not installed, optionally show prompt to teach them how to install
     if (isIosDevice && !window.matchMedia("(display-mode: standalone)").matches) {
-      // setShowPrompt(true); // Uncomment to aggressively show iOS prompt
+      setShowPrompt(true);
     }
 
     return () => window.removeEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
@@ -59,7 +59,9 @@ export function InstallPrompt() {
     if (deferredPrompt) {
       deferredPrompt.prompt();
       const { outcome } = await deferredPrompt.userChoice;
-      if (outcome === "accepted") {
+      if (outcome === "dismissed") {
+        handleDismiss();
+      } else {
         setShowPrompt(false);
       }
       setDeferredPrompt(null);
