@@ -36,6 +36,8 @@ async function syncEmbeddings() {
         { upsert: true }
       );
       embeddedCount++;
+      // Wait 2 seconds to avoid Gemini free tier rate limits (15 RPM)
+      await new Promise((resolve) => setTimeout(resolve, 2000));
     }
 
     // 2. Sync Resources
@@ -51,6 +53,8 @@ async function syncEmbeddings() {
         { upsert: true }
       );
       embeddedCount++;
+      // Wait 2 seconds to avoid Gemini free tier rate limits (15 RPM)
+      await new Promise((resolve) => setTimeout(resolve, 2000));
     }
 
     console.log(`\n✅ Successfully synced ${embeddedCount} items to Vector DB.`);

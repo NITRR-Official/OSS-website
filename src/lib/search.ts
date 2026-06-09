@@ -1,46 +1,25 @@
-import type { PipelineType } from "@xenova/transformers";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 import dbConnect from "@/lib/db/mongodb";
 import Embedding from "@/lib/db/models/Embedding";
 
-// Use a singleton pattern to ensure the model is loaded only once in production
-class PipelineSingleton {
-  static task: PipelineType = "feature-extraction";
-  static model = "Xenova/all-MiniLM-L6-v2";
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  static instance: any = null;
+// Ensure we have an API key
+const API_KEY = process.env.GEMINI_API_KEY || "";
+let genAI: GoogleGenerativeAI | null = null;
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  static async getInstance(progress_callback: any = null) {
-    if (this.instance === null) {
-      // Dynamically import pipeline to prevent top-level execution during Next.js build
-      const { pipeline, env } = await import("@xenova/transformers");
-
-      // Configuration for Vercel Serverless environments
-      env.allowLocalModels = false;
-      env.useBrowserCache = false;
-      // Vercel only allows writing to /tmp
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (env as any).cacheDir = "/tmp/.cache/transformers";
-
-      this.instance = pipeline(this.task, this.model, { progress_callback });
-    }
-    return this.instance;
-  }
+if (API_KEY) {
+  genAI = new GoogleGenerativeAI(API_KEY);
 }
 
 export async function generateEmbedding(text: string): Promise<number[]> {
-  try {
-    const extractor = await PipelineSingleton.getInstance();
-
-    // Generate embedding
-    const output = await extractor(text, { pooling: "mean", normalize: true });
-
-    // Return as array of numbers
-    return Array.from(output.data);
-  } catch (error) {
-    console.error("Error generating embedding:", error);
-    throw error;
+  if (!genAI) {
+    throw new Error("GEMINI_API_KEY is not set in environment variables");
   }
+
+  // Use the default stable gemini-embedding-001 model (768 dimensions)
+  const model = genAI.getGenerativeModel({ model: "gemini-embedding-001" });
+
+  const result = await model.embedContent(text);
+  return result.embedding.values;
 }
 
 export async function searchContent(query: string, type?: "blog" | "resource", limit = 5) {
