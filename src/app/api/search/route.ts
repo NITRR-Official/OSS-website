@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { searchContent } from "@/lib/search";
 
 export const dynamic = "force-dynamic";
+export const maxDuration = 60; // Prevent timeout on cold starts
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -15,8 +16,8 @@ export async function GET(request: Request) {
   try {
     const results = await searchContent(q, type);
     return NextResponse.json(results);
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("Search API Error:", error);
-    return NextResponse.json({ error: "Search failed" }, { status: 500 });
+    return NextResponse.json({ error: (error as Error).message }, { status: 500 });
   }
 }
