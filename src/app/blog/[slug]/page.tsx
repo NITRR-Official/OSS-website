@@ -10,9 +10,9 @@ import { HelpfulStats } from "@/components/shared/HelpfulStats";
 import { CommentsSection } from "@/components/blog/CommentsSection";
 
 interface BlogPostPageProps {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }
 
 export async function generateMetadata({ params }: BlogPostPageProps) {

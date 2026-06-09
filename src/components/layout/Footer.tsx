@@ -3,7 +3,8 @@ import { Github, Mail } from "lucide-react";
 import { Container } from "./Container";
 import { SITE_CONFIG } from "@/lib/constants";
 import { Separator } from "@/components/ui/separator";
-
+import { ThemeToggle } from "@/components/layout/ThemeToggle";
+import { PushNotificationToggle } from "@/components/pwa/PushNotificationToggle";
 const footerLinks = {
   pages: [
     { name: "Projects", href: "/projects" },
@@ -40,7 +41,7 @@ export function Footer() {
               <p className="mt-4 max-w-md text-sm text-muted-foreground">
                 {SITE_CONFIG.description}
               </p>
-              <div className="mt-6 flex space-x-4">
+              <div className="mt-6 flex items-center space-x-4">
                 <Link
                   href={SITE_CONFIG.links.github}
                   target="_blank"
@@ -57,6 +58,10 @@ export function Footer() {
                   <Mail className="h-5 w-5" />
                   <span className="sr-only">Email</span>
                 </Link>
+                <ThemeToggle />
+              </div>
+              <div className="mt-4">
+                <PushNotificationToggle />
               </div>
             </div>
 

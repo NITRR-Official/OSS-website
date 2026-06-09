@@ -8,9 +8,9 @@ import { ArrowLeft, Github, List } from "lucide-react";
 import { HelpfulStats } from "@/components/shared/HelpfulStats";
 
 interface ResourcePageProps {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }
 
 export async function generateMetadata({ params }: ResourcePageProps) {

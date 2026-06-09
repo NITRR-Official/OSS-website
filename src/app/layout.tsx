@@ -28,7 +28,14 @@ export const metadata: Metadata = {
     title: SITE_CONFIG.name,
     description: SITE_CONFIG.description,
   },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: SITE_CONFIG.shortName,
+  },
 };
+
+import { InstallPrompt } from "@/components/pwa/InstallPrompt";
 
 export default function RootLayout({
   children,
@@ -45,6 +52,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <DevelopmentNotice />
+          <InstallPrompt />
           <div className="relative flex min-h-screen flex-col">
             <Navbar />
             <main className="flex-1">{children}</main>

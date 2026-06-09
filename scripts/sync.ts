@@ -58,6 +58,46 @@ async function syncEmbeddings() {
     }
 
     console.log(`\n✅ Successfully synced ${embeddedCount} items to Vector DB.`);
+
+    // --- Send Push Notifications ---
+    try {
+      const webpush = (await import("web-push")).default;
+      const PushSubscription = (await import("@/lib/db/models/PushSubscription")).default;
+
+      if (process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY && process.env.VAPID_PRIVATE_KEY) {
+        webpush.setVapidDetails(
+          "mailto:contact@nitrr-oss.org",
+          process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY,
+          process.env.VAPID_PRIVATE_KEY
+        );
+
+        const subscriptions = await PushSubscription.find();
+        if (subscriptions.length > 0) {
+          const payload = JSON.stringify({
+            title: "NITRR OSS Updated!",
+            body: `We just added new content. Come check it out!`,
+            url: "/",
+          });
+
+          let sent = 0;
+          for (const sub of subscriptions) {
+            try {
+              await webpush.sendNotification({ endpoint: sub.endpoint, keys: sub.keys }, payload);
+              sent++;
+            } catch (e) {
+              // @ts-expect-error - webpush error type
+              if (e.statusCode === 404 || e.statusCode === 410) {
+                await PushSubscription.findByIdAndDelete(sub._id);
+              }
+            }
+          }
+          console.log(`\n🔔 Sent push notifications to ${sent} subscribers.`);
+        }
+      }
+    } catch (e) {
+      console.log("\n⚠️ Could not send push notifications. (Did you add VAPID keys?)");
+    }
+
     process.exit(0);
   } catch (error) {
     console.error("❌ Sync failed:", error);
